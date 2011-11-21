@@ -4,7 +4,7 @@
 #include "cfmodify.h"
 #include "cfdump.h"
 #include "helper.h"
-#include "usage/classfile.h"
+#include "classfile.h"
 
 /**
  * Adds a new CONSTANT_CLASS entry to the constant_pool and returns the index
