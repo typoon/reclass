@@ -1,0 +1,23 @@
+; Código já existente
+bipush 63
+istore_1
+getstatic 00 02
+new 00 03
+dup
+invokespecial 00 04
+ldc 05
+invokevirtual 00 06
+iload_1
+invokevirtual 00 07
+invokevirtual 00 08
+invokevirtual 00 09
+
+; Inicio do nosso código
+getstatic 00 02      ; Colocamos referência de System.out na Operand Stack
+ldc 2B               ; A string estará na posição 43 da constant pool,
+                     ; considerando a classe de exemplo acima. Se em seu caso
+                     ; o indice for diferente, atualize de acordo.
+                     ; Carregamos sua referência para a Operand Stack
+invokevirtual 00 09  ; Invocamos o método System.out.println
+
+return
