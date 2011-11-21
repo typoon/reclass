@@ -4,7 +4,7 @@
 #include "cfdump.h"
 #include "helper.h"
 #include "opcodes.h"
-#include "usage/cfdump.h"
+#include "cfdump.h"
 
 #define MAX_CODE_SIZE (1024 * 500)
 
