@@ -5,8 +5,11 @@
 #include "helper.h"
 #include "opcodes.h"
 #include "cfdump.h"
+#include "classfile.h"
 
 #define MAX_CODE_SIZE (1024 * 500)
+
+void dumpAttribute(ClassFile *cf, attribute_info *ai);
 
 char* parseMethodSignature(ClassFile *cf, method_info *mi);
 char* parseFieldSignature(ClassFile *cf, field_info *fi);
@@ -353,72 +356,72 @@ void RC_DumpClassFile(ClassFile *cf)
 
         switch(cf->constant_pool[index].tag) {
         case CONSTANT_CLASS:
-            printf("\t\t CONSTANT_CLASS: name_index = %d\n",
+            printf("\t\tCONSTANT_CLASS: name_index = %d\n",
                     cf->constant_pool[index].ci.name_index);
             txt = nameIndexToString(cf, cf->constant_pool[index].ci.name_index);
-            printf("\t\t Class: %s\n", txt);
+            printf("\t\tClass: %s\n", txt);
             free(txt);
             break;
 
         case CONSTANT_FIELDREF:
-            printf("\t\t CONSTANT_FIELDREF: class_index = %d\n",
+            printf("\t\tCONSTANT_FIELDREF: class_index = %d\n",
                     cf->constant_pool[index].fri.class_index);
 
-            printf("\t\t CONSTANT_FIELDREF: name_and_type_index = %d\n",
+            printf("\t\tCONSTANT_FIELDREF: name_and_type_index = %d\n",
                     cf->constant_pool[index].fri.name_and_type_index);
 
             txt = fieldrefToString(cf, &cf->constant_pool[index].fri);
-            printf("\t\t %s \n", txt);
+            printf("\t\t%s \n", txt);
             free(txt);
 
             break;
 
         case CONSTANT_METHODREF:
-            printf("\t\t CONSTANT_METHODREF: class_index = %d\n",
+            printf("\t\tCONSTANT_METHODREF: class_index = %d\n",
                     cf->constant_pool[index].mri.class_index);
 
-            printf("\t\t CONSTANT_METHODREF: name_and_type_index = %d\n",
+            printf("\t\tCONSTANT_METHODREF: name_and_type_index = %d\n",
                     cf->constant_pool[index].mri.name_and_type_index);
 
             txt = methodrefToString(cf, &cf->constant_pool[index].mri);
-            printf("\t\t %s \n", txt);
+            printf("\t\t%s \n", txt);
             free(txt);
 
             break;
 
         case CONSTANT_INTERFACEMETHODREF:
-            printf("\t\t CONSTANT_INTERFACEMETHODREF: class_index = %d\n",
+            printf("\t\tCONSTANT_INTERFACEMETHODREF: class_index = %d\n",
                     cf->constant_pool[index].imri.class_index);
 
-            printf("\t\t CONSTANT_INTERFACEMETHODREF: name_and_type_index = %d\n",
+            printf("\t\tCONSTANT_INTERFACEMETHODREF: name_and_type_index = %d\n",
                     cf->constant_pool[index].imri.name_and_type_index);
             break;
 
         case CONSTANT_STRING:
-            printf("\t\t CONSTANT_STRING: string_index = %d\n",
+            printf("\t\tCONSTANT_STRING: string_index = %d\n",
                     cf->constant_pool[index].si.string_index);
 
             txt = nameIndexToString(cf, cf->constant_pool[index].si.string_index);
-            printf("\t\t String: %s\n", txt);
+            printf("\t\tString: %s\n", txt);
             free(txt);
 
             break;
 
         case CONSTANT_INTEGER:
-            printf("\t\t CONSTANT_INTEGER: bytes = %d\n",
+            printf("\t\tCONSTANT_INTEGER: bytes = %d\n",
                     cf->constant_pool[index].ii.bytes);
             break;
 
         case CONSTANT_FLOAT:
-            printf("\t\t CONSTANT_FLOAT: bytes = %d\n",
+            printf("\t\tCONSTANT_FLOAT: bytes = %d\n",
                     cf->constant_pool[index].fi.bytes);
             break;
 
         case CONSTANT_LONG:
-            printf("\t\t CONSTANT_LONG: high_bytes = %d\n",
+            printf("\t\tCONSTANT_LONG: high_bytes = %d\n",
                     cf->constant_pool[index].li.high_bytes);
 
-            printf("\t\t CONSTANT_LONG: low_bytes = %d\n",
+            printf("\t\tCONSTANT_LONG: low_bytes = %d\n",
                     cf->constant_pool[index].li.low_bytes);
 
             l = ((long long)cf->constant_pool[index].li.high_bytes << 32) +
@@ -429,26 +432,26 @@ void RC_DumpClassFile(ClassFile *cf)
             break;
 
         case CONSTANT_DOUBLE:
-            printf("\t\t CONSTANT_DOUBLE: high_bytes = %d\n",
+            printf("\t\tCONSTANT_DOUBLE: high_bytes = %d\n",
                     cf->constant_pool[index].li.high_bytes);
 
-            printf("\t\t CONSTANT_DOUBLE: low_bytes = %d\n",
+            printf("\t\tCONSTANT_DOUBLE: low_bytes = %d\n",
                     cf->constant_pool[index].li.low_bytes);
             break;
 
         case CONSTANT_NAMEANDTYPE:
-            printf("\t\t CONSTANT_NAMEANDTYPE: name_index = %d\n",
+            printf("\t\tCONSTANT_NAMEANDTYPE: name_index = %d\n",
                     cf->constant_pool[index].nti.name_index);
 
-            printf("\t\t CONSTANT_NAMEANDTYPE: descriptor_index = %d\n",
+            printf("\t\tCONSTANT_NAMEANDTYPE: descriptor_index = %d\n",
                     cf->constant_pool[index].nti.descriptor_index);
             break;
 
         case CONSTANT_UTF8:
-            printf("\t\t CONSTANT_UTF8: length = %d\n",
+            printf("\t\tCONSTANT_UTF8: length = %d\n",
                     cf->constant_pool[index].utfi.length);
 
-            printf("\t\t CONSTANT_UTF8: bytes: ");
+            printf("\t\tCONSTANT_UTF8: bytes: ");
 
             // Need to use something to print utf-8 accordingly
             // I know nothing about this stuff :|
@@ -489,24 +492,28 @@ void RC_DumpClassFile(ClassFile *cf)
 
     printf("\n");
     printf("cf->attributes_count = %d\n", cf->attributes_count);
+    for(i = 0; i < cf->attributes_count; i++) {
+        dumpAttribute(cf, &cf->attributes[i]);
+    }
 }
 
 char* accessFlagsToString(u2 flags)
 {
     char *txt;
     txt = (char *)malloc(sizeof (char)* 128);
+    memset(txt, 0, sizeof (char)* 128);
 
-    if(flags & ACC_STATIC) sprintf(txt, "static ");
-    if(flags & ACC_FINAL) sprintf(txt, "final ");
-    if(flags & ACC_VOLATILE) sprintf(txt, "volatile ");
-    if(flags & ACC_TRANSIENT) sprintf(txt, "transient ");
-    if(flags & ACC_ABSTRACT) sprintf(txt, "abstract ");
+    if(flags & ACC_STATIC)       sprintf(txt, "static ");
+    if(flags & ACC_FINAL)        sprintf(txt, "final ");
+    if(flags & ACC_VOLATILE)     sprintf(txt, "volatile ");
+    if(flags & ACC_TRANSIENT)    sprintf(txt, "transient ");
+    if(flags & ACC_ABSTRACT)     sprintf(txt, "abstract ");
     if(flags & ACC_SYNCHRONIZED) sprintf(txt, "synchronized ");
-    if(flags & ACC_NATIVE) sprintf(txt, "native ");
-    if(flags & ACC_STRICT) sprintf(txt, "strictfp ");
+    if(flags & ACC_NATIVE)       sprintf(txt, "native ");
+    if(flags & ACC_STRICT)       sprintf(txt, "strictfp ");
 
-    if(flags & ACC_PUBLIC) sprintf(txt, "public ");
-    if(flags & ACC_PRIVATE) sprintf(txt, "private ");
+    if(flags & ACC_PUBLIC)    sprintf(txt, "public ");
+    if(flags & ACC_PRIVATE)   sprintf(txt, "private ");
     if(flags & ACC_PROTECTED) sprintf(txt, "protected ");
 
     txt[strlen(txt) - 1] = '\0';
@@ -753,6 +760,48 @@ void RC_DumpMethods(ClassFile *cf)
         printf("}\n");
 
 
+    }
+}
+
+void dumpAttribute(ClassFile *cf, attribute_info *ai)
+{
+    int i;
+    int length;
+    char *txt;
+    u1 tmpu1p[128];
+
+    if(ai->attribute_length > 0) {
+        length = cf->constant_pool[ai->attribute_name_index].utfi.length;
+
+        memset(tmpu1p, 0, sizeof (tmpu1p));
+        for(i = 0; i < length; i++)
+            tmpu1p[i] = cf->constant_pool[ai->attribute_name_index].utfi.bytes[i];
+
+        printf("\tAttribute: %s\n", tmpu1p);
+
+        if(strncmp((const char *)tmpu1p, ATTR_CONSTANTVALUE, length) == 0) {
+            printf("\t\tConstant pool index: %d\n", ai->cva.constantvalue_index);
+        }
+
+        if(strncmp((const char *)tmpu1p, ATTR_INNERCLASSES, length) == 0) {
+            printf("\t\tNumber of classes: %d\n", ai->ica.number_of_classes);
+
+            for(i = 0; i < ai->ica.number_of_classes; i++) {
+                txt = accessFlagsToString(ai->ica.classes[i].inner_class_access_flags);
+                printf("\t\tAccess flags: %s [%02X]\n", txt, ai->ica.classes[i].inner_class_access_flags);
+                free(txt);
+
+                txt = nameIndexToString(cf, ai->ica.classes[i].inner_name_index);
+                printf("\t\tClass name: %s\n", txt);
+                free(txt);
+
+                printf("\t\tai->ica.classes[i].inner_class_info_index = %d\n", ai->ica.classes[i].inner_class_info_index);
+                printf("\t\tai->ica.classes[i].outer_class_info_index = %d\n", ai->ica.classes[i].outer_class_info_index);
+
+
+            }
+
+        }
     }
 }
 

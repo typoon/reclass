@@ -7,6 +7,7 @@ all:
 	@cp ../*.a .
 	$(CC) $(FLAGS) usage_example1.c libreclass.a -o ue1
 	$(CC) $(FLAGS) usage_example2.c libreclass.a -o ue2
+	$(CC) $(FLAGS) hack.c libreclass.a -o hack
 	$(CC) $(FLAGS) main.c libreclass.a -o main
 
 clean:
