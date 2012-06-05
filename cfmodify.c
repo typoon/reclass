@@ -5,6 +5,7 @@
 #include "cfdump.h"
 #include "helper.h"
 #include "classfile.h"
+#include "parser.h"
 
 /**
  * Adds a new CONSTANT_CLASS entry to the constant_pool and returns the index
@@ -272,4 +273,14 @@ int RC_AddMethod(ClassFile *cf, char *name, char *descriptor, int access_flags, 
     *method = &cf->methods[cf->methods_count-1];
     return methodref_index;
 
+}
+
+/**
+ * Compiles the file in file_path and adds the compiled code to the
+ * ClassFile cf. If this function fails (returns CF_NOTOK), the contents
+ * of cf cannot be trusted anymore and it is now probably corrupt.
+ */
+int RC_AddCodeFromAsm(ClassFile *cf, char *file_path)
+{
+    return parse(cf, file_path);
 }

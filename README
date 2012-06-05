@@ -25,6 +25,10 @@ ToDo list:
     -> Write a decent Makefile
     -> Write better CF_Dump* functions
     -> Write functions that return the content of structures in a easy to parse way
+    -> Fix memory leaks! LEAK ALL THE MEMORIES! (not funny)
+    -> Build a GUI someday? (Probably separate project)
+    -> Reimplement the way the 'map' type is being handled. It is slow and not elegnat
+
 
 
 At this point, I do not see the use for this stuff other than to teach/show about how a Virtual Machine works through examples that can be changed and tested.
