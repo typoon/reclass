@@ -1,18 +1,14 @@
 CC=gcc
-FLAGS=-Wall -ggdb -Wno-format-contains-nul
-LD_LIBRARY_PATH=.:$(LD_LIBRARY_PATH)
+JAVAC=javac
+FLAGS=-Wall -lreclass
 
 all:
-	@cp ../*.h .
-	@cp ../*.a .
-	$(CC) $(FLAGS) usage_example1.c libreclass.a -o ue1
-	$(CC) $(FLAGS) usage_example2.c libreclass.a -o ue2
-	$(CC) $(FLAGS) hack.c libreclass.a -o hack
-	$(CC) $(FLAGS) main.c libreclass.a -o main
+	$(CC) $(FLAGS) ex1.c -o ex1
+	
+	$(CC) $(FLAGS) ex2.c -o ex2
+	
+	$(CC) $(FLAGS) ex3.c -o ex3
+	$(JAVAC) ex3.java
 
 clean:
-	rm *.h
-	rm *.a
-	@rm ue1
-	@rm ue2
-	@rm main
+	@rm ex1 ex2 ex3 ex3.class

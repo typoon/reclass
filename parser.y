@@ -14,6 +14,8 @@ void yyerror(const char *s);
 
 buffer *code;
 int current_method;
+int current_max_stack;
+int current_max_locals;
 
 
 %}
@@ -24,6 +26,7 @@ int current_method;
     char *str_val;
     char *identifier;
     char *param;
+    int visibility;
 }
 
 %token <int_val>    INT
@@ -41,6 +44,7 @@ int current_method;
 %token METHOD_START
 %token <param> PARAMS
 %token METHOD_END
+%token <visibility> VISIBILITY
 
 /* Opcodes */
 %token NOP
@@ -280,6 +284,8 @@ int current_method;
 
 start:
     identifiers methods
+    | identifiers
+    | methods
     ;
 
 identifiers:
@@ -298,18 +304,22 @@ identifiers:
     ;
 
 methods:
-    methods method_start method_body METHOD_END
-    | method_start method_body METHOD_END
+    methods method_start method_body method_end
+    | method_start method_body method_end
     ;
 
 method_start:
-    METHOD_START IDENTIFIER PARAMS { if( method_start((ClassFile *)cf, $2, $3) < 0) YYABORT; }
+    METHOD_START IDENTIFIER PARAMS { if(method_start((ClassFile *)cf, $2, $3) < 0) YYABORT; }
     ;
     
 method_body:
     identifiers
     | mnemonics
     | identifiers mnemonics
+    ;
+
+method_end:
+    METHOD_END { if(method_end((ClassFile *)cf) < 0) YYABORT; }
     ;
 
 /*
@@ -939,24 +949,82 @@ opcode:
     ;
 
 getstatic:
-    GETSTATIC INT { printf("I will getstatic from int %d\n", $2); }
-    | GETSTATIC STRING { printf("I will getstatic from string %s\n", $2); }
+    GETSTATIC INT          { getstatic_int((ClassFile *)cf, $2); }
+    | GETSTATIC IDENTIFIER { printf("I will getstatic from string %s\n", $2); }
     ;
 
 %%
 
-void nop(ClassFile *cf)
+/**
+ * This function generates the opcode for the getstatic opcode
+ * It will check if the index specified is valid into the constant_pool
+ * according to the Classfile documentation and warn the user if 
+ * it isn't. This check WILL NOT prevent the code of being compiled
+ * as this value might have been intentional (looking for vulns for
+ * example)
+ */
+void getstatic_int(ClassFile *cf, int index)
 {
+    unsigned char bytes[3];
+    
+    if(index > cf->constant_pool_count) {
+        debug(DBG_WARN, "Index for getstatic %d is greater than the \
+                         number of entries in the constant pool", index);
+                         
+    } else {
+        if(cf->constant_pool[index].tag != CONSTANT_FIELDREF) {
+            debug(DBG_WARN, "Index for getstatic %d does not point to \
+                             a CONSTANT_Fieldref into the constant_pool",
+                             index);
+        }
+    }
+    
+    bytes[0] = 0xB2;
+    bytes[1] = (index & 0x0000FF00) >> 8;
+    bytes[2] = (index & 0x000000FF);
+    
+    if(buffer_append(code, bytes, 3) != 3) {
+        debug(DBG_ERROR, "Cannot append code to buffer... Aborting");
+    }
+    
+    current_max_stack += 1;
     
 }
 
 int method_start(ClassFile *cf, char *identifier, char *params)
 {
-    //RC_AddMethod();
+    method_info *MyMethod;
+    
+    current_method = RC_GetMethodIndex(cf, identifier, params);
+    
+    if(current_method == -1) {
+        RC_AddMethod(cf, identifier, "()V", ACC_PUBLIC | ACC_STATIC, &MyMethod);
+        
+        current_method = RC_GetMethodIndex(cf, identifier, params);
+        if(current_method == -1) {
+            debug(DBG_ERROR, "Impossible to create method %s [%s]", identifier, params);
+            return -1;
+        }
+    }
+
+
+    return 0;
+}
+
+int method_end(ClassFile *cf)
+{
+    
+    RC_ChangeMethodCodeAttribute(cf, &cf->methods[current_method] , 
+                                 code->bytes, code->size, 
+                                 current_max_stack, 
+                                 current_max_locals);
+    
+    return 0;
 }
 
 int parse(ClassFile *cf, char *file_path)
 {
+    int ret = CF_OK;
     FILE *f;
 
     if((f = fopen(file_path, "r")) == NULL) {
@@ -965,14 +1033,22 @@ int parse(ClassFile *cf, char *file_path)
     }
     
     yyin = f;
+    current_method = 0;
+    current_max_stack = 0;
+    current_max_locals = 0;
+    code = buffer_new(0);
     
     do {
         if(yyparse(cf) > 0) {
-            return CF_NOTOK;
+            ret = CF_NOTOK;
+            break;
         }
     } while (!feof(yyin));
 
-    return CF_OK;
+
+    buffer_free(code);
+
+    return ret;
 }
 
 void yyerror(const char *s) {

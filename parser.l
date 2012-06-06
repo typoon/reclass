@@ -9,6 +9,7 @@ int new_instruction = 0;
 %}
 
 %option nounput
+%option noyywrap
 
 %%
 

@@ -5,6 +5,7 @@ FLAGS=-Wall -fPIC -ggdb -DDEBUG -lfl
 PROG=libreclass
 OBJS=$(shell ls *.c | sed -e "s/\.c/.o/g")
 HEADERS=$(shell ls *.h)
+YACC=bison
 
 PREFIX=/usr/local
 INSTALL_INCLUDE_DIR=/usr/include/reclass
@@ -36,7 +37,7 @@ clean:
 	@rm -f parser.tab.c parser.tab.h lex.yy.c
 
 install:
-	@mkdir $(INSTALL_INCLUDE_DIR)
+	#@mkdir $(INSTALL_INCLUDE_DIR)
 	cp $(HEADERS) $(INSTALL_INCLUDE_DIR)
 	cp bin/* $(INSTALL_LIBS_DIR)
 	ldconfig

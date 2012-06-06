@@ -93,7 +93,7 @@ buffer* buffer_new(unsigned int size)
     
     if(size > 0) {
         
-        b->bytes = (char *)malloc(sizeof(char) * size);
+        b->bytes = (unsigned char *)malloc(sizeof(unsigned char) * size);
         
         if(b->bytes == NULL) {
             debug(DBG_ERROR, "Cannot allocate %d bytes for buffer", size);
@@ -136,7 +136,7 @@ void buffer_clear(buffer *b)
  * 
  * Returns the number of bytes appended or -1 in case of error
  */
-int buffer_append(buffer *b, char* data, unsigned int size)
+int buffer_append(buffer *b, unsigned char* data, unsigned int size)
 {
     if(!b)
         return -1;
@@ -148,10 +148,7 @@ int buffer_append(buffer *b, char* data, unsigned int size)
         return 0;
         
     
-    if(!realloc(b->bytes, b->size + size)) {
-        return -1;
-    }
-    
+    b->bytes = (unsigned char *)realloc(b->bytes, b->size + size);
     memcpy(&b->bytes[b->size], data, size);
     
     b->size += size;

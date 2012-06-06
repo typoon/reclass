@@ -279,6 +279,10 @@ int RC_AddMethod(ClassFile *cf, char *name, char *descriptor, int access_flags, 
  * Compiles the file in file_path and adds the compiled code to the
  * ClassFile cf. If this function fails (returns CF_NOTOK), the contents
  * of cf cannot be trusted anymore and it is now probably corrupt.
+ * 
+ * If a method declared in the 'file_path' file already exists in the
+ * current ClassFile, such method will be overwritten with the new
+ * assembly.
  */
 int RC_AddCodeFromAsm(ClassFile *cf, char *file_path)
 {

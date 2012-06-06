@@ -5,6 +5,9 @@
 
 int parse(ClassFile *cf, char *file_path);
 int method_start(ClassFile *cf, char *identifier, char *params);
+int method_end(ClassFile *cf);
 
+// Opcode functions
+void getstatic_int(ClassFile *cf, int index);
 
 #endif

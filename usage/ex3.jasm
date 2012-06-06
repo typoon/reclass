@@ -1,0 +1,9 @@
+.method aa ()
+	getstatic 10
+	getstatic 20
+.method_end
+
+.method bb ()
+	getstatic 40
+.method_end
+

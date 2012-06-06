@@ -2,6 +2,7 @@
 *.a
 *.so
 *.class
+*.gch
 nbproject
 nbproject/
 post

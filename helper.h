@@ -15,13 +15,13 @@ void printUtf8(char *bytes, int length);
 
 typedef struct _buffer {
     unsigned int size;
-    char *bytes;
+    unsigned char *bytes;
 } buffer;
 
 buffer* buffer_new(unsigned int size);
 void buffer_free(buffer* b);
 void buffer_clear(buffer *b);
-int buffer_append(buffer *b, char* data, unsigned int size);
+int buffer_append(buffer *b, unsigned char* data, unsigned int size);
 
 
 

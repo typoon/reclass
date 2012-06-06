@@ -5,8 +5,46 @@
 #include "classfile.h"
 #include "cfdump.h"
 
+/**
+ * This function searchs the ClassFile methods for a method called
+ * 'name' with params 'signature'.
+ * If found, it returns the index into the 'methods' member from the
+ * ClassFile 'cf' structure. If not, it returns -1.
+ */
+int RC_GetMethodIndex(ClassFile *cf, char *name, char *signature)
+{
 
+    int i;
+    char *nameTmp;
+    char *signatureTmp;
+    int ret = -1;
 
+    for(i = 0; i < cf->methods_count; i++) {
+        nameTmp = nameIndexToString(cf, cf->methods[i].name_index);
+
+        if(memcmp(name, nameTmp, strlen(name)) != 0) {
+            free(nameTmp);
+            continue;
+        }
+
+        free(nameTmp);
+
+        signatureTmp = descriptorIndexToString(cf, cf->methods[i].descriptor_index);
+        if(memcmp(signature, signatureTmp, strlen(signature)) == 0) {
+            ret = i;
+            break;
+        }
+    }
+
+    return ret;
+}
+
+/**
+ * This function searchs the ClassFile methods for a method called
+ * 'name' with params 'signature'.
+ * If found, it returns the reference to the method_info inside the
+ * ClassFile cf structure. If not, it returns null.
+ */
 method_info* RC_GetMethod(ClassFile *cf, char *name, char *signature)
 {
 
@@ -28,6 +66,7 @@ method_info* RC_GetMethod(ClassFile *cf, char *name, char *signature)
         signatureTmp = descriptorIndexToString(cf, cf->methods[i].descriptor_index);
         if(memcmp(signature, signatureTmp, strlen(signature)) == 0) {
             ret = &cf->methods[i];
+            break;
         }
     }
 
