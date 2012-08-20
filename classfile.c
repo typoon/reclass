@@ -45,12 +45,12 @@
 
 
 
-// Function prototypes
-int readConstantPool(ClassFile *cf, FILE *f);
-int readInterfaces(ClassFile *cf, FILE *f);
-int readFields(ClassFile *cf, FILE *f);
-int readMethods(ClassFile *cf, FILE *f);
-int readAttributeInfo(ClassFile *cf, attribute_info *af, FILE *f);
+// Local functions prototypes
+static int readConstantPool(ClassFile *cf, FILE *f);
+static int readInterfaces(ClassFile *cf, FILE *f);
+static int readFields(ClassFile *cf, FILE *f);
+static int readMethods(ClassFile *cf, FILE *f);
+static int readAttributeInfo(ClassFile *cf, attribute_info *af, FILE *f);
 
 int RC_ReadClassFile(char *path, ClassFile *cf)
 {
@@ -138,7 +138,7 @@ int RC_ReadClassFile(char *path, ClassFile *cf)
     return CF_OK;
 }
 
-int readConstantPool(ClassFile *cf, FILE *f)
+static int readConstantPool(ClassFile *cf, FILE *f)
 {
     int i;
     int index = 1;
@@ -275,7 +275,7 @@ int readConstantPool(ClassFile *cf, FILE *f)
     return CF_OK;
 }
 
-int readInterfaces(ClassFile *cf, FILE *f)
+static int readInterfaces(ClassFile *cf, FILE *f)
 {
     int i;
     u2 if_items;
@@ -307,7 +307,7 @@ int readInterfaces(ClassFile *cf, FILE *f)
     return CF_OK;
 }
 
-int readFields(ClassFile *cf, FILE *f)
+static int readFields(ClassFile *cf, FILE *f)
 {
     int i;
     int j;
@@ -365,7 +365,7 @@ int readFields(ClassFile *cf, FILE *f)
     return CF_OK;
 }
 
-int readMethods(ClassFile *cf, FILE *f)
+static int readMethods(ClassFile *cf, FILE *f)
 {
     int i;
     int j;
@@ -421,7 +421,7 @@ int readMethods(ClassFile *cf, FILE *f)
     return CF_OK;
 }
 
-int readAttributeInfo(ClassFile *cf, attribute_info *ai, FILE *f)
+static int readAttributeInfo(ClassFile *cf, attribute_info *ai, FILE *f)
 {
     int i;
     int length;
@@ -644,4 +644,3 @@ int readAttributeInfo(ClassFile *cf, attribute_info *ai, FILE *f)
     return CF_OK;
 
 }
-

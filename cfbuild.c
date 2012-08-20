@@ -2,12 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "cfbuild.h"
-#include "classfile.h"
 #include "helper.h"
-#include "cfmodify.h"
+#include "cfbuild.h"
 
-int buildConstantPool(ClassFile *cf, FILE *f)
+static int buildConstantPool(ClassFile *cf, FILE *f)
 {
     int i;
     u2 tmpu2;
@@ -104,7 +102,7 @@ int buildConstantPool(ClassFile *cf, FILE *f)
     return CF_OK;
 }
 
-int buildInterfaces(ClassFile *cf, FILE *f)
+static int buildInterfaces(ClassFile *cf, FILE *f)
 {
     int i;
     u2 tmpu2;
@@ -287,7 +285,7 @@ int buildAttributes(ClassFile *cf, attribute_info *ai, FILE *f)
     return CF_OK;
 }
 
-int buildFields(ClassFile *cf, FILE *f)
+static int buildFields(ClassFile *cf, FILE *f)
 {
     int i;
     int j;
@@ -320,7 +318,7 @@ int buildFields(ClassFile *cf, FILE *f)
     return CF_OK;
 }
 
-int buildMethods(ClassFile *cf, FILE *f)
+static int buildMethods(ClassFile *cf, FILE *f)
 {
     int i;
     int j;
@@ -426,7 +424,6 @@ int RC_BuildClassFile(ClassFile* cf, char *path, char* name)
             return CF_NOTOK;
         }
     }
-
 
     fclose(f);
 

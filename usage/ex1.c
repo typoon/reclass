@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "reclass/reclass.h"
+#include "reclass.h"
 
 u1 opc[] = {
     0x10, 0x63,       // bipush  0x63

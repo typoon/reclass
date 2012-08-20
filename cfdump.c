@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "cfdump.h"
 #include "helper.h"
 #include "opcodes.h"
-#include "cfdump.h"
-#include "classfile.h"
 
 #define MAX_CODE_SIZE (1024 * 500)
 
@@ -13,7 +12,6 @@ void dumpAttribute(ClassFile *cf, attribute_info *ai);
 
 char* parseMethodSignature(ClassFile *cf, method_info *mi);
 char* parseFieldSignature(ClassFile *cf, field_info *fi);
-
 
 char* accessFlagsToString(u2 flags);
 char *fieldNameAndTypeToString(ClassFile *cf, NameAndType_info *nti);
@@ -350,7 +348,7 @@ void RC_DumpClassFile(ClassFile *cf)
     printf("\n");
     printf("cf->constant_pool_count = %d\n", cf->constant_pool_count);
 
-    for(i = 1; i <= cf->constant_pool_count - 1; i++) {
+    for(i = index; i <= cf->constant_pool_count - 1; i++) {
 
         printf("\tIndex %d\n", index);
 

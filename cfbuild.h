@@ -1,10 +1,13 @@
 #ifndef CFBUILD_H
-#define	CFBUILD_H
+#define CFBUILD_H
 
-#include "classfile.h"
+#include "reclass.h"
 
-extern int RC_BuildClassFile(ClassFile *cf, char *path, char *name);
+static int buildConstantPool(ClassFile *cf, FILE *f);
+static int buildInterfaces(ClassFile *cf, FILE *f);
+static int buildAttributes(ClassFile *cf, attribute_info *ai, FILE *f);
+static int buildFields(ClassFile *cf, FILE *f);
+static int buildMethods(ClassFile *cf, FILE *f);
 
-
-#endif	/* CFBUILD_H */
+#endif  /* CFBUILD_H */
 

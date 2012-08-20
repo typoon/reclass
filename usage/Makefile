@@ -1,13 +1,13 @@
 CC=gcc
 JAVAC=javac
-FLAGS=-Wall -lreclass
+FLAGS=-Wall -L../bin -I../ -lreclass -ggdb
 
 all:
-	$(CC) $(FLAGS) ex1.c -o ex1
+	pwd
+	$(CC) ex1.c -o ex1 $(FLAGS)
+	$(CC) ex2.c -o ex2 $(FLAGS) 
+	$(CC) ex3.c -o ex3 $(FLAGS) 
 	
-	$(CC) $(FLAGS) ex2.c -o ex2
-	
-	$(CC) $(FLAGS) ex3.c -o ex3
 	$(JAVAC) ex3.java
 
 clean:

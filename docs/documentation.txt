@@ -1,0 +1,7 @@
+All exported functions can be found on reclass.h, as well as all datatype definitios.
+Every exported function starts with a RC_ prefix, to avoid symbol conflicts with any software where this might be used.
+
+Exported types are:
+    ClassFile
+    ...
+

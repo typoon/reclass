@@ -2,11 +2,81 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "classfile.h"
 #include "cfdump.h"
+#include "cfget.h"
 
 /**
- * This function searchs the ClassFile methods for a method called
+ * This function searches the Constant Pool for a method with name
+ * 'name', signature 'signature' within the class loaded in the 'cf'.
+ * If found, it returns the index from the Constant Pool where it has
+ * been found. If not found, it returns -1
+ */
+int RC_CPGetMethodRefIndexCurrentClass(ClassFile *cf, char *name, char *signature)
+{
+    int ret = -1;
+    char *classNameTmp;
+    
+    classNameTmp = nameIndexToString(cf, cf->constant_pool[cf->this_class].ci.name_index);
+    ret = RC_CPGetMethodRefIndex(cf, name, signature, classNameTmp);
+    
+    free(classNameTmp);
+    
+    return ret;
+}
+
+/**
+ * This function searches the Constant Pool for a method with name
+ * 'name', signature 'signature' within class 'class'.
+ * If found, it returns the index from the Constant Pool where it has
+ * been found. If not found, it returns -1
+ */
+int RC_CPGetMethodRefIndex(ClassFile *cf, char *name, char *signature, char *className)
+{
+
+    int i;
+    char *nameTmp;
+    char *signatureTmp;
+    char *classNameTmp;
+    int ret = -1;
+    
+    for(i = 1; i < cf->constant_pool_count; i++) {
+        if(cf->constant_pool[i].tag == CONSTANT_METHODREF) {
+            nameTmp = nameIndexToString(cf, cf->constant_pool[cf->constant_pool[i].mri.name_and_type_index].nti.name_index);
+            
+            if(memcmp(name, nameTmp, strlen(name)) != 0) {
+                free(nameTmp);
+                continue;
+            }
+            
+            free(nameTmp);
+            
+            signatureTmp = descriptorIndexToString(cf, cf->constant_pool[cf->constant_pool[i].mri.name_and_type_index].nti.descriptor_index);
+            if(memcmp(signature, signatureTmp, strlen(signature)) != 0) {
+                free(signatureTmp);
+                continue;
+            }
+        
+            free(signatureTmp);
+            
+            classNameTmp = nameIndexToString(cf, cf->constant_pool[cf->constant_pool[i].mri.class_index].ci.name_index);
+            if(memcmp(className, classNameTmp, strlen(className)) != 0) {
+                free(classNameTmp);
+                continue;
+            }
+            
+            free(classNameTmp);
+            
+            ret = i;
+            break;
+        }
+    }
+
+    return ret;
+}
+
+
+/**
+ * This function searchs the ClassFile 'cf' methods for a method called
  * 'name' with params 'signature'.
  * If found, it returns the index into the 'methods' member from the
  * ClassFile 'cf' structure. If not, it returns -1.
@@ -32,8 +102,11 @@ int RC_GetMethodIndex(ClassFile *cf, char *name, char *signature)
         signatureTmp = descriptorIndexToString(cf, cf->methods[i].descriptor_index);
         if(memcmp(signature, signatureTmp, strlen(signature)) == 0) {
             ret = i;
+            free(signatureTmp);
             break;
         }
+        
+        free(signatureTmp);
     }
 
     return ret;
@@ -66,8 +139,11 @@ method_info* RC_GetMethod(ClassFile *cf, char *name, char *signature)
         signatureTmp = descriptorIndexToString(cf, cf->methods[i].descriptor_index);
         if(memcmp(signature, signatureTmp, strlen(signature)) == 0) {
             ret = &cf->methods[i];
+            free(signatureTmp);
             break;
         }
+        
+        free(signatureTmp);
     }
 
     return ret;

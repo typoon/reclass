@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "cfmodify.h"
 #include "cfdump.h"
 #include "helper.h"
-#include "classfile.h"
-#include "parser.h"
+#include "compiler.h"
 
 /**
  * Adds a new CONSTANT_CLASS entry to the constant_pool and returns the index
@@ -97,7 +97,7 @@ int RC_CPAddInteger(ClassFile *cf, u4 value)
     cf->constant_pool = (cp_info *)realloc(cf->constant_pool, sizeof (cp_info) * (cf->constant_pool_count + 1));
 
     cf->constant_pool[index].tag = CONSTANT_INTEGER;
-    cf->constant_pool[index].ii.bytes = swapendi(value);
+    cf->constant_pool[index].ii.bytes = value; //swapendi(value);
 
     return index;
 }
@@ -135,7 +135,9 @@ int RC_RenameClass(ClassFile *cf, char *name)
  */
 int RC_ChangeMethodCodeAttribute(ClassFile *cf, method_info *method, u1 *code, int code_length, int max_stack, int max_locals)
 {
+    int i;
     int j;
+    int k;
     int found = 0;
     char *attr_name;
 
@@ -145,6 +147,7 @@ int RC_ChangeMethodCodeAttribute(ClassFile *cf, method_info *method, u1 *code, i
 
         if(strncmp(attr_name, ATTR_CODE, strlen(attr_name)) == 0) {
             found = 1;
+            free(attr_name);
 
             if(max_stack > 0) {
                 method->attributes[j].ca.max_stack = max_stack;
@@ -160,11 +163,28 @@ int RC_ChangeMethodCodeAttribute(ClassFile *cf, method_info *method, u1 *code, i
             method->attributes[j].attribute_length += code_length;
 
             // Reallocate the size of the code area
-            method->attributes[j].ca.code = (u1 *)realloc(method->attributes[j].ca.code, code_length * sizeof(u1));
-            memcpy(method->attributes[j].ca.code, code, code_length);
+            free(method->attributes[j].ca.code);
+            method->attributes[j].ca.code = (u1 *)malloc(code_length * sizeof(u1));
+            memcpy(&method->attributes[j].ca.code[0], code, code_length);
+
+            for(i = 0; i < method->attributes[j].ca.attributes_count; i++) {
+                attr_name = nameIndexToString(cf, method->attributes[j].ca.attributes[i].attribute_name_index);
+
+                // We need to remove the linenumbertable stuff, as this cannot be debuged anymore
+                if(strncmp(attr_name, ATTR_LINENUMBERTABLE, strlen(attr_name)) == 0) {
+                    for(k = 0; k < method->attributes[j].ca.attributes[i].lnta.line_number_table_length; k++) {
+                        method->attributes[j].ca.attributes[i].lnta.line_number_table[k].start_pc = 0;
+                        method->attributes[j].ca.attributes[i].lnta.line_number_table[k].line_number = 1;
+                    }
+                }
+
+                free(attr_name);
+                
+            }
+            
         }
 
-        free(attr_name);
+        
     }
 
 
@@ -286,5 +306,5 @@ int RC_AddMethod(ClassFile *cf, char *name, char *descriptor, int access_flags, 
  */
 int RC_AddCodeFromAsm(ClassFile *cf, char *file_path)
 {
-    return parse(cf, file_path);
+    return compile(cf, file_path);
 }

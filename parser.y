@@ -1,22 +1,10 @@
 %{
 #include <stdio.h>
+#include <string.h>
 #include "reclass.h"
-#include "helper.h"
-#include "parser.h"
+#include "compiler.h"
 
 #define YYPARSE_PARAM cf
-
-int yylex();
-int yyparse();
-FILE *yyin;
- 
-void yyerror(const char *s);
-
-buffer *code;
-int current_method;
-int current_max_stack;
-int current_max_locals;
-
 
 %}
 
@@ -289,19 +277,29 @@ start:
     ;
 
 identifiers:
-    identifiers VAR_INT IDENTIFIER INT
-    | identifiers VAR_DOUBLE IDENTIFIER DOUBLE
-    | identifiers VAR_STRING IDENTIFIER STRING
-    | identifiers VAR_INT IDENTIFIER
-    | identifiers VAR_DOUBLE IDENTIFIER
-    | identifiers VAR_STRING IDENTIFIER
-    | VAR_INT IDENTIFIER INT
-    | VAR_DOUBLE IDENTIFIER DOUBLE
-    | VAR_STRING IDENTIFIER STRING
-    | VAR_INT IDENTIFIER
+    identifiers var_int
+    | identifiers var_double
+    | identifiers var_string
+    | var_int
+    | var_double
+    | var_string
+    ;
+
+var_int:
+    VAR_INT IDENTIFIER INT      { if(create_int((ClassFile *)cf, $2, $3) < 0) YYABORT; }
+    | VAR_INT IDENTIFIER        { if(create_int((ClassFile *)cf, $2, 0)  < 0) YYABORT; }
+    ;
+
+var_double:
+    VAR_DOUBLE IDENTIFIER DOUBLE
     | VAR_DOUBLE IDENTIFIER
+    ;
+
+var_string:
+    VAR_STRING IDENTIFIER STRING
     | VAR_STRING IDENTIFIER
     ;
+
 
 methods:
     methods method_start method_body method_end
@@ -343,7 +341,6 @@ mnemonics:
 opcode:
     nop
 /*
-    | nop
     | aconst_null
     | iconst_m1
     | iconst_0
@@ -520,8 +517,8 @@ opcode:
     | freturn
     | dreturn
     | areturn
-    | return
 */
+    | return
     | getstatic
 /*
     | putstatic
@@ -731,7 +728,9 @@ opcode:
     | bastore
     | castore
     | sastore
+*/
     | pop
+/*
     | pop2
     | dup
     | dup_x1
@@ -948,109 +947,16 @@ opcode:
 */
     ;
 
+return:
+    RETURN                 { jreturn(); }
+
 getstatic:
     GETSTATIC INT          { getstatic_int((ClassFile *)cf, $2); }
-    | GETSTATIC IDENTIFIER { printf("I will getstatic from string %s\n", $2); }
+    | GETSTATIC IDENTIFIER { if(getstatic_identifier((ClassFile *)cf, $2) < 0) YYABORT; }
     ;
+
+pop:
+    POP                    { pop(); }
 
 %%
 
-/**
- * This function generates the opcode for the getstatic opcode
- * It will check if the index specified is valid into the constant_pool
- * according to the Classfile documentation and warn the user if 
- * it isn't. This check WILL NOT prevent the code of being compiled
- * as this value might have been intentional (looking for vulns for
- * example)
- */
-void getstatic_int(ClassFile *cf, int index)
-{
-    unsigned char bytes[3];
-    
-    if(index > cf->constant_pool_count) {
-        debug(DBG_WARN, "Index for getstatic %d is greater than the \
-                         number of entries in the constant pool", index);
-                         
-    } else {
-        if(cf->constant_pool[index].tag != CONSTANT_FIELDREF) {
-            debug(DBG_WARN, "Index for getstatic %d does not point to \
-                             a CONSTANT_Fieldref into the constant_pool",
-                             index);
-        }
-    }
-    
-    bytes[0] = 0xB2;
-    bytes[1] = (index & 0x0000FF00) >> 8;
-    bytes[2] = (index & 0x000000FF);
-    
-    if(buffer_append(code, bytes, 3) != 3) {
-        debug(DBG_ERROR, "Cannot append code to buffer... Aborting");
-    }
-    
-    current_max_stack += 1;
-    
-}
-
-int method_start(ClassFile *cf, char *identifier, char *params)
-{
-    method_info *MyMethod;
-    
-    current_method = RC_GetMethodIndex(cf, identifier, params);
-    
-    if(current_method == -1) {
-        RC_AddMethod(cf, identifier, "()V", ACC_PUBLIC | ACC_STATIC, &MyMethod);
-        
-        current_method = RC_GetMethodIndex(cf, identifier, params);
-        if(current_method == -1) {
-            debug(DBG_ERROR, "Impossible to create method %s [%s]", identifier, params);
-            return -1;
-        }
-    }
-
-
-    return 0;
-}
-
-int method_end(ClassFile *cf)
-{
-    
-    RC_ChangeMethodCodeAttribute(cf, &cf->methods[current_method] , 
-                                 code->bytes, code->size, 
-                                 current_max_stack, 
-                                 current_max_locals);
-    
-    return 0;
-}
-
-int parse(ClassFile *cf, char *file_path)
-{
-    int ret = CF_OK;
-    FILE *f;
-
-    if((f = fopen(file_path, "r")) == NULL) {
-        printf("Error opening file: %s\n", file_path);
-        return CF_NOTOK;
-    }
-    
-    yyin = f;
-    current_method = 0;
-    current_max_stack = 0;
-    current_max_locals = 0;
-    code = buffer_new(0);
-    
-    do {
-        if(yyparse(cf) > 0) {
-            ret = CF_NOTOK;
-            break;
-        }
-    } while (!feof(yyin));
-
-
-    buffer_free(code);
-
-    return ret;
-}
-
-void yyerror(const char *s) {
-    printf("Error on token: %s\n", s);
-}

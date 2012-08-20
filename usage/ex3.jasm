@@ -1,9 +1,7 @@
-.method aa ()
-	getstatic 10
-	getstatic 20
-.method_end
+.int myInt 2
+.string myStr "Minha string cool!"
 
-.method bb ()
-	getstatic 40
+.method main ([Ljava/lang/String;)V
+    return
 .method_end
 

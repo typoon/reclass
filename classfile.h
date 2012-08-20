@@ -69,19 +69,18 @@ typedef unsigned int   u4;
 // Below attributes are currently not being read. They should be.
 // Not reading them will cause class files with these attributes set to be read
 // incorrectly
-#define ATTR_ENCLOSINGMETHOD     "EnclosingMethod"
-#define ATTR_SIGNATURE           "Signature"
-#define ATTR_SOURCEDEBUGEXTENSION "SourceDebugExtension"
-#define ATTR_LOCALVARIABLETYPETABLE "LocalVariableTypeTable"
-#define ATTR_RUNTIMEVISIBLEANNOTATIONS "RuntimeVisibleAnnotations"
-#define ATTR_RUNTIMEINVISIBLEANNOTATIONS "RuntimeInvisibleAnnotations"
-#define ATTR_RUNTIMEVISIBLEPARAMETERANNOTATIONS "RuntimeVisibleParameterAnnotations"
+#define ATTR_ENCLOSINGMETHOD                      "EnclosingMethod"
+#define ATTR_SIGNATURE                            "Signature"
+#define ATTR_SOURCEDEBUGEXTENSION                 "SourceDebugExtension"
+#define ATTR_LOCALVARIABLETYPETABLE               "LocalVariableTypeTable"
+#define ATTR_RUNTIMEVISIBLEANNOTATIONS            "RuntimeVisibleAnnotations"
+#define ATTR_RUNTIMEINVISIBLEANNOTATIONS          "RuntimeInvisibleAnnotations"
+#define ATTR_RUNTIMEVISIBLEPARAMETERANNOTATIONS   "RuntimeVisibleParameterAnnotations"
 #define ATTR_RUNTIMEINVISIBLEPARAMETERANNOTATIONS "RuntimeInvisibleParameterAnnotations"
-#define ATTR_ANNOTATIONDEFAULT "AnnotationDefault"
+#define ATTR_ANNOTATIONDEFAULT                    "AnnotationDefault"
 
 
-// Constant Pool Structures
-
+/* Constant Pool Structures */
 typedef struct _Class_info {
     u2 name_index;
 } Class_info;
@@ -280,8 +279,5 @@ typedef struct _ClassFile {
     u2 attributes_count;
     attribute_info *attributes; //[attributes_count];
 } ClassFile;
-
-// Functions go here
-extern int RC_ReadClassFile(char *path, ClassFile *cf);
 
 #endif

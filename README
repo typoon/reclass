@@ -20,15 +20,13 @@ ToDo list:
     -> Add validation routines to function readMethods to make sure methods match the .class format specification
     -> Add validation routines to function readAttributeInfo to make sure methods match the .class format specification
     -> Add support to UTF8 (being able to read code that uses UTF-8 chars, building methods with UTF-8 chars on their name, and pretty much everything that can use UTF-8 in a .class file)
-    -> Write a Java assembly compiler (This should be done to facilitate the addition of methods and fields to the class, and also to make it easier to change current existing methods)
+    -> Write a Java assembly compiler (This should be done to facilitate the addition of methods and fields to the class, and also to make it easier to change current existing methods) - In Progress
     -> Document functions with examples
     -> Write a decent Makefile
     -> Write better CF_Dump* functions
     -> Write functions that return the content of structures in a easy to parse way
     -> Fix memory leaks! LEAK ALL THE MEMORIES! (not funny)
     -> Build a GUI someday? (Probably separate project)
-    -> Reimplement the way the 'map' type is being handled. It is slow and not elegnat
-
 
 
 At this point, I do not see the use for this stuff other than to teach/show about how a Virtual Machine works through examples that can be changed and tested.

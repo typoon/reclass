@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "reclass/reclass.h"
+#include <stdlib.h>
+#include "reclass.h"
 
 int main(int argc, char **argv)
 {
@@ -12,14 +13,15 @@ int main(int argc, char **argv)
 
     RC_ReadClassFile(argv[1], &cf);
 
+    
     if(RC_AddCodeFromAsm(&cf, argv[2]) != CF_OK) {
         printf("Error modifying ClassFile! Aborting...\n");
         return -1;
     }
+    
 
     RC_BuildClassFile(&cf, "/tmp", "MyRebuiltClass");
-    RC_DumpClassFile(&cf);
+    //RC_DumpClassFile(&cf);
 
     return 0;
-
 }

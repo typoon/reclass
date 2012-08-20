@@ -25,9 +25,14 @@ int new_instruction = 0;
 
 [\.]method                     { return METHOD_START; }
 [\.]method_end                 { return METHOD_END; }
-[\(][\)]                       { yylval.param = strdup(yytext);       return PARAMS; }
+[\(][a-zA-Z\[;\/]*[\)][a-zA-Z\[;\/]* { yylval.param = strdup(yytext);       return PARAMS; }
 
+return                         { return RETURN;    }
 getstatic                      { return GETSTATIC; }
+pop                            { return POP;       }
+ldc                            { return LDC;       }
+invokevirtual                  { return INVOKEVIRTUAL; }
+invokestatic                   { return INVOKESTATIC; }
 
 [a-zA-Z]+                      { yylval.identifier = strdup(yytext);  return IDENTIFIER; }
 
