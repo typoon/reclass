@@ -16,25 +16,61 @@ int new_instruction = 0;
 
 [\t]                           ;
 [\n]                           { new_instruction = 1; }
-[1-9]+[0-9]*                   { yylval.int_val = atoi(yytext);    return INT; }
+
+[1-9]+[0-9]*                   { 
+                                   int x = atoi(yytext); 
+                                   if((x >=0 )&& (x <= 255)) {
+                                       yylval.byte_val = x;
+                                       return BYTE;
+                                   } else {
+                                       yylval.int_val = x;
+                                       return INT;
+                                   }
+                               }
+                        
+"0x"[0-9a-fA-F]{1,2}           { yylval.byte_val = strtol(yytext, NULL, 16); return BYTE; }
+    
 ["]([^\\"]+|\\.)*["]           { yylval.str_val = strdup(yytext);  return STRING; }
 
-[\.]int                        { return VAR_INT; }
+[\.]byte                       { return VAR_BYTE;   }
+[\.]int                        { return VAR_INT;    }
 [\.]double                     { return VAR_DOUBLE; }
 [\.]string                     { return VAR_STRING; }
 
 [\.]method                     { return METHOD_START; }
-[\.]method_end                 { return METHOD_END; }
-[\(][a-zA-Z\[;\/]*[\)][a-zA-Z\[;\/]* { yylval.param = strdup(yytext);       return PARAMS; }
+[\.]method_end                 { return METHOD_END;   }
+[\(][a-zA-Z\[;\/]*[\)][a-zA-Z\[;\/]* { yylval.param = strdup(yytext); return PARAMS; }
 
-return                         { return RETURN;    }
-getstatic                      { return GETSTATIC; }
-pop                            { return POP;       }
-ldc                            { return LDC;       }
-invokevirtual                  { return INVOKEVIRTUAL; }
-invokestatic                   { return INVOKESTATIC; }
 
-[a-zA-Z]+                      { yylval.identifier = strdup(yytext);  return IDENTIFIER; }
+
+nop                            { return NOP;                                  }
+aconst_null                    { return ACONST_NULL;                          }
+iconst_m1                      { return ICONST_M1;                            }
+iconst_0                       { return ICONST_0;                             }
+iconst_1                       { return ICONST_1;                             }
+iconst_2                       { return ICONST_2;                             }
+iconst_3                       { return ICONST_3;                             }
+iconst_4                       { return ICONST_4;                             }
+iconst_5                       { return ICONST_5;                             }
+lconst_0                       { return LCONST_0;                             }
+lconst_1                       { return LCONST_1;                             }
+fconst_0                       { return FCONST_0;                             }
+fconst_1                       { return FCONST_1;                             }
+fconst_2                       { return FCONST_2;                             }
+dconst_0                       { return DCONST_0;                             }
+dconst_1                       { return DCONST_1;                             }
+bipush                         { return BIPUSH;                               }
+sipush                         { return SIPUSH;                               }
+return                         { return RETURN;                               }
+getstatic                      { return GETSTATIC;                            }
+pop                            { return POP;                                  }
+ldc                            { return LDC;                                  }
+invokevirtual                  { return INVOKEVIRTUAL;                        }
+invokestatic                   { return INVOKESTATIC;                         }
+
+
+
+\$[a-zA-Z_]+                   { yylval.identifier = strdup(yytext);  return IDENTIFIER; }
 
 .                              ; 
 

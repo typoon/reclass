@@ -7,9 +7,6 @@ int yylex();
 int yyparse();
 void yyerror(const char *s);
 
-#define SYM_METHOD 0
-#define SYM_VAR    1
-
 int compile(ClassFile *cf, char *file_path);
 
 // Assembler functions
@@ -17,11 +14,32 @@ int method_start(ClassFile *cf, char *identifier, char *params);
 int method_end(ClassFile *cf);
 
 int create_int(ClassFile *cf, char *identifier, int value);
+int create_byte(ClassFile *cf, char *identifier, unsigned char value);
 
 // Opcode functions
-void jreturn();
-void getstatic_int(ClassFile *cf, int index);
+int nop();
+int aconstnull();
+int iconstm1();
+int iconst0();
+int iconst1();
+int iconst2();
+int iconst3();
+int iconst4();
+int iconst5();
+int lconst0();
+int lconst1();
+int fconst0();
+int fconst1();
+int fconst2();
+int dconst0();
+int dconst1();
+
+int bipush_byte(unsigned char byte);
+int bipush_identifier(char *identifier);
+
+int jreturn();
+int getstatic_int(ClassFile *cf, int index);
 int getstatic_identifier(ClassFile *cf, char *identifier);
-void pop();
+int pop();
 
 #endif

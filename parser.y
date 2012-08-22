@@ -9,6 +9,7 @@
 %}
 
 %union {
+    unsigned char byte_val;
     int int_val;
     double double_val;
     char *str_val;
@@ -20,12 +21,14 @@
 %token <int_val>    INT
 %token <double_val> DOUBLE
 %token <str_val>    STRING
+%token <byte_val>   BYTE
 
 
 /* General asm identifiers */
 %token VAR_INT
 %token VAR_STRING
 %token VAR_DOUBLE
+%token VAR_BYTE
 
 %token <identifier> IDENTIFIER
 
@@ -280,9 +283,11 @@ identifiers:
     identifiers var_int
     | identifiers var_double
     | identifiers var_string
+    | identifiers var_byte
     | var_int
     | var_double
     | var_string
+    | var_byte
     ;
 
 var_int:
@@ -300,6 +305,10 @@ var_string:
     | VAR_STRING IDENTIFIER
     ;
 
+var_byte:
+    VAR_BYTE IDENTIFIER BYTE    { if(create_byte((ClassFile *)cf, $2, $3) < 0) YYABORT; }
+    | VAR_BYTE IDENTIFIER       { if(create_byte((ClassFile *)cf, $2, 0)  < 0) YYABORT; }
+    ;
 
 methods:
     methods method_start method_body method_end
@@ -320,19 +329,6 @@ method_end:
     METHOD_END { if(method_end((ClassFile *)cf) < 0) YYABORT; }
     ;
 
-/*
- Why does this rule does not work?
-
-method_body:
-    identifiers mnemonics
-    ;
-*/
-
-
-nop:
-    NOP
-    ;
-
 mnemonics:
     mnemonics opcode
     | opcode
@@ -340,7 +336,6 @@ mnemonics:
 
 opcode:
     nop
-/*
     | aconst_null
     | iconst_m1
     | iconst_0
@@ -357,6 +352,7 @@ opcode:
     | dconst_0
     | dconst_1
     | bipush
+/*
     | sipush
     | ldc
     | ldc_w
@@ -947,16 +943,89 @@ opcode:
 */
     ;
 
+/** Opcodes start */
+nop:
+    NOP                      { if(nop() != CF_OK) YYABORT; }
+    ;
+
+aconst_null:
+    ACONST_NULL              { if(aconstnull() != CF_OK) YYABORT; }
+    ;
+
+iconst_m1:
+    ICONST_M1                { if(iconstm1() != CF_OK) YYABORT; }
+    ;
+
+iconst_0:
+    ICONST_0                 { if(iconst0() != CF_OK) YYABORT; }
+    ;
+
+iconst_1:
+    ICONST_1                 { if(iconst1() != CF_OK) YYABORT; }
+    ;
+
+iconst_2:
+    ICONST_2                 { if(iconst2() != CF_OK) YYABORT; }
+    ;
+
+iconst_3:
+    ICONST_3                 { if(iconst3() != CF_OK) YYABORT; }
+    ;
+
+iconst_4:
+    ICONST_4                 { if(iconst4() != CF_OK) YYABORT; }
+    ;
+
+iconst_5:
+    ICONST_5                 { if(iconst5() != CF_OK) YYABORT; }
+    ;
+
+lconst_0:
+    LCONST_0                 { if(lconst0() != CF_OK) YYABORT; }
+    ;
+
+lconst_1:
+    LCONST_1                 { if(lconst1() != CF_OK) YYABORT; }
+    ;
+
+fconst_0:
+    FCONST_0                 { if(fconst0() != CF_OK) YYABORT; }
+    ;
+
+fconst_1:
+    FCONST_1                 { if(fconst1() != CF_OK) YYABORT; }
+    ;
+
+fconst_2:
+    FCONST_2                 { if(fconst2() != CF_OK) YYABORT; }
+    ;
+
+dconst_0:
+    DCONST_0                 { if(dconst0() != CF_OK) YYABORT; }
+    ;
+
+dconst_1:
+    DCONST_1                 { if(dconst1() != CF_OK) YYABORT; }
+    ;
+
+bipush:
+    BIPUSH BYTE              { if(bipush_byte($2) != CF_OK) YYABORT; }
+    | BIPUSH IDENTIFIER      { if(bipush_identifier($2) != CF_OK) { free($2); YYABORT; } free($2); }
+    ;
+    
+
 return:
-    RETURN                 { jreturn(); }
+    RETURN                   { if(jreturn() != CF_OK) YYABORT; }
+    ;
 
 getstatic:
-    GETSTATIC INT          { getstatic_int((ClassFile *)cf, $2); }
-    | GETSTATIC IDENTIFIER { if(getstatic_identifier((ClassFile *)cf, $2) < 0) YYABORT; }
+      GETSTATIC INT          { if(getstatic_int((ClassFile *)cf, $2) != CF_OK) YYABORT;        }
+    | GETSTATIC BYTE         { if(getstatic_int((ClassFile *)cf, (int)$2) != CF_OK) YYABORT;   }
+    | GETSTATIC IDENTIFIER   { if(getstatic_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }
     ;
 
 pop:
-    POP                    { pop(); }
+    POP                      { if(pop() != CF_OK) YYABORT; }
 
 %%
 

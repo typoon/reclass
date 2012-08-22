@@ -16,13 +16,334 @@ int current_max_locals;
 
 /* Opcode compilation */
 
-void jreturn()
-{
-    unsigned char bytes[1];
+/**
+ * nop
+ * OPC: 0x00
+ */
+int nop() {
+    unsigned char byte;
     
-    bytes[0] = 0xB1;
-    buffer_append(code, bytes, 1);
+    byte = 0x00;
+    buffer_append(code, &byte, 1);
+
+    return CF_OK;   
+}
+
+/**
+ * Increments stack by 1
+ * 
+ * aconst_null
+ * OPC: 0x01
+ */
+int aconstnull() {
+    unsigned char byte;
     
+    byte = 0x01;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * iconst_m1
+ * OPC: 0x02
+ */
+int iconstm1() {
+    unsigned char byte;
+
+    byte = 0x02;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * iconst_0
+ * OPC: 0x03
+ */
+int iconst0() {
+    unsigned char byte;
+
+    byte = 0x03;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * iconst_1
+ * OPC: 0x04
+ */
+int iconst1() {
+    unsigned char byte;
+
+    byte = 0x04;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * iconst_2
+ * OPC: 0x05
+ */
+int iconst2() {
+    unsigned char byte;
+
+    byte = 0x05;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * iconst_3
+ * OPC: 0x06
+ */
+int iconst3() {
+    unsigned char byte;
+
+    byte = 0x06;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * iconst_4
+ * OPC: 0x07
+ */
+int iconst4() {
+    unsigned char byte;
+
+    byte = 0x07;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * iconst_5
+ * OPC: 0x08
+ */
+int iconst5() {
+    unsigned char byte;
+
+    byte = 0x08;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * lconst_0
+ * OPC: 0x09
+ */
+int lconst0() {
+    unsigned char byte;
+
+    byte = 0x09;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * lconst_1
+ * OPC: 0x0A
+ */
+int lconst1() {
+    unsigned char byte;
+
+    byte = 0x0A;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * fconst_0
+ * OPC: 0x0B
+ */
+int fconst0() {
+    unsigned char byte;
+
+    byte = 0x0B;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * fconst_1
+ * OPC: 0x0C
+ */
+int fconst1() {
+    unsigned char byte;
+
+    byte = 0x0C;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * fconst_2
+ * OPC: 0x0D
+ */
+int fconst2() {
+    unsigned char byte;
+
+    byte = 0x0D;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * dconst_0
+ * OPC: 0x0E
+ */
+int dconst0() {
+    unsigned char byte;
+
+    byte = 0x0E;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * dconst_1
+ * OPC: 0x0F
+ */
+int dconst1() {
+    unsigned char byte;
+
+    byte = 0x0F;
+    buffer_append(code, &byte, 1);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * dconst_1
+ * OPC: 0x10 BYTE
+ */
+int bipush_byte(unsigned char byte) {
+    unsigned char bytes[2];
+
+    bytes[0] = 0x10;
+    bytes[1] = byte;
+    buffer_append(code, bytes, 2);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * dconst_1
+ * OPC: 0x10 IDENTIFIER
+ */
+int bipush_identifier(char *identifier) {
+    symbol    *s;
+    symbol    *tmp;
+    
+    tmp = symbol_new(identifier);
+    
+    s = dllist_find(symbols_list, tmp);
+    
+    symbol_free(tmp);
+    
+    if(s == NULL) {
+        debug(DBG_ERROR, "bipush_identifier: identifier %s not found", identifier);
+        return CF_NOTOK;
+    }
+
+    if(((symbol *)s)->type != SYM_BYTE) {
+        debug(DBG_ERROR, "bipush_identifier: identifier %s not of type BYTE", identifier);
+        return CF_NOTOK;
+    }
+    
+    return bipush_byte(((symbol *)s)->value.byte);
+}
+
+/*****************************************************************************/
+
+/**
+ * return
+ * OPC: 0xB1
+ */
+int jreturn() {
+    unsigned char byte;
+    
+    byte = 0xB1;
+    buffer_append(code, &byte, 1);
+
+    return CF_OK;
 }
 
 /**
@@ -32,9 +353,11 @@ void jreturn()
  * it isn't. This check WILL NOT prevent the code from being compiled
  * as this value might have been intentional (looking for vulns for
  * example)
+ *
+ * getstatic int
+ * OPC: 0xB2 HI_ADDR LO_ADDR
  */
-void getstatic_int(ClassFile *cf, int index)
-{
+int getstatic_int(ClassFile *cf, int index) {
     unsigned char bytes[3];
     
     if(index > cf->constant_pool_count) {
@@ -58,11 +381,16 @@ void getstatic_int(ClassFile *cf, int index)
     }
     
     current_max_stack += 1;
-    
+
+    return CF_OK;
+
 }
 
-int getstatic_identifier(ClassFile *cf, char *identifier)
-{
+/**
+ * getstatic identifier
+ * OPC: 0xB2 HI_ADDR LO_ADDR
+ */
+int getstatic_identifier(ClassFile *cf, char *identifier) {
     
     symbol    *s;
     symbol    *tmp;
@@ -75,27 +403,25 @@ int getstatic_identifier(ClassFile *cf, char *identifier)
     
     if(s == NULL) {
         debug(DBG_ERROR, "getstatic: identifier %s not found", identifier);
-        return -1;
+        return CF_NOTOK;
     }
     
-    getstatic_int(cf, ((symbol *)s)->cp_index);
-    
-    return 0;
+    return getstatic_int(cf, ((symbol *)s)->cp_index);
     
 }
 
-void pop()
-{
+int pop() {
     unsigned char bytes[1];
     
     bytes[0] = 0x57;
     buffer_append(code, bytes, 1);
+
+    return CF_OK;
 }
 
 /* Assembler special directives */
 
-int method_start(ClassFile *cf, char *identifier, char *params)
-{
+int method_start(ClassFile *cf, char *identifier, char *params) {
     method_info *MyMethod;
     symbol *s;
     
@@ -111,15 +437,14 @@ int method_start(ClassFile *cf, char *identifier, char *params)
         current_method = RC_GetMethodIndex(cf, identifier, params);
         if(current_method == -1) {
             debug(DBG_ERROR, "Impossible to create method %s [%s]", identifier, params);
-            return -1;
+            return CF_NOTOK;
         }
     }
 
-    return 0;
+    return CF_OK;
 }
 
-int method_end(ClassFile *cf)
-{
+int method_end(ClassFile *cf) {
     
     RC_ChangeMethodCodeAttribute(cf, &cf->methods[current_method] , 
                                  code->bytes, code->size, 
@@ -132,17 +457,16 @@ int method_end(ClassFile *cf)
     current_max_locals = 0;
     buffer_clear(code);
     
-    return 0;
+    return CF_OK;
 }
 
-int create_int(ClassFile *cf, char *identifier, int value)
-{
+int create_int(ClassFile *cf, char *identifier, int value) {
     
     int index;
     symbol *s;
     
     s = symbol_new(identifier);
-    s->type = SYM_VAR;
+    s->type = SYM_INT;
     
     if(dllist_find(symbols_list, s)) {
         debug(DBG_ERROR, "Symbol %s already declared. Aborting...\n",
@@ -150,23 +474,45 @@ int create_int(ClassFile *cf, char *identifier, int value)
         
         symbol_free(s);
         
-        return -1;
+        return CF_NOTOK;
     }
 
 
     index = RC_CPAddInteger(cf, (u4)value);
+    
     s->cp_index = index;
+    s->value.i = value;
     
     dllist_add(symbols_list, (void *)s);
     
-    return 0;
-    
+    return CF_OK;
 }
 
+int create_byte(ClassFile *cf, char *identifier, unsigned char value) {
+    
+    symbol *s;
+    
+    s = symbol_new(identifier);
+    s->type = SYM_BYTE;
+    
+    if(dllist_find(symbols_list, s)) {
+        debug(DBG_ERROR, "Symbol %s already declared. Aborting...\n",
+              identifier);
+        
+        symbol_free(s);
+        
+        return CF_NOTOK;
+    }
+ 
+    s->value.byte = value;
+    
+    dllist_add(symbols_list, (void *)s);
+    
+    return CF_OK;
+}
 
 /* Entry point */
-int compile(ClassFile *cf, char *file_path)
-{
+int compile(ClassFile *cf, char *file_path) {
     int ret = CF_OK;
     FILE *f;
 
