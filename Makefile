@@ -1,6 +1,6 @@
 CC=gcc
 FLAGS=-Wall -fPIC -ggdb
-#FLAGS += -DDEBUG
+FLAGS += -DDEBUG
 
 PROG=libreclass
 OBJS=$(shell ls *.c | grep -v reclass_dumper.c | sed -e "s/\.c/.o/g")

@@ -1,8 +1,7 @@
-
-.string $myStr "Minha string cool!"
 .int $myInt 2
 
 .method main ([Ljava/lang/String;)V
+    sipush 0x1234
     return
 .method_end
 

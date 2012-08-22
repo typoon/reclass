@@ -5,6 +5,7 @@
 #define YY_NO_INPUT
 
 int new_instruction = 0;
+int line = 1;
 
 %}
 
@@ -15,11 +16,11 @@ int new_instruction = 0;
 
 
 [\t]                           ;
-[\n]                           { new_instruction = 1; }
+[\n]                           { new_instruction = 1; ++line; }
 
 [1-9]+[0-9]*                   { 
                                    int x = atoi(yytext); 
-                                   if((x >=0 )&& (x <= 255)) {
+                                   if((x >= 0) && (x <= 255)) {
                                        yylval.byte_val = x;
                                        return BYTE;
                                    } else {
@@ -28,7 +29,16 @@ int new_instruction = 0;
                                    }
                                }
                         
-"0x"[0-9a-fA-F]{1,2}           { yylval.byte_val = strtol(yytext, NULL, 16); return BYTE; }
+"0x"[0-9a-fA-F]{1,8}           {
+                                   int x = strtol(yytext, NULL, 16);
+                                   if((x >= 0) && (x <= 255)) {
+                                       yylval.byte_val = x;
+                                       return BYTE;
+                                   } else {
+                                       yylval.int_val = x;
+                                       return INT;
+                                   }
+                               }
     
 ["]([^\\"]+|\\.)*["]           { yylval.str_val = strdup(yytext);  return STRING; }
 
@@ -61,16 +71,17 @@ dconst_0                       { return DCONST_0;                             }
 dconst_1                       { return DCONST_1;                             }
 bipush                         { return BIPUSH;                               }
 sipush                         { return SIPUSH;                               }
+ldc                            { return LDC;                                  }
 return                         { return RETURN;                               }
 getstatic                      { return GETSTATIC;                            }
 pop                            { return POP;                                  }
-ldc                            { return LDC;                                  }
 invokevirtual                  { return INVOKEVIRTUAL;                        }
 invokestatic                   { return INVOKESTATIC;                         }
 
 
 
-\$[a-zA-Z_]+                   { yylval.identifier = strdup(yytext);  return IDENTIFIER; }
+[$][a-zA-Z_$]+                   { yylval.identifier = strdup(yytext);  return IDENTIFIER; }
+[a-zA-Z]+                        { yylval.identifier = strdup(yytext);  return METHOD_IDENTIFIER; }
 
 .                              ; 
 

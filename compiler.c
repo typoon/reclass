@@ -13,6 +13,7 @@ dllist *symbols_list;
 int current_method;
 int current_max_stack;
 int current_max_locals;
+extern int line;
 
 /* Opcode compilation */
 
@@ -287,7 +288,7 @@ int dconst1() {
 /**
  * Increments stack by 1
  *
- * dconst_1
+ * bipush BYTE
  * OPC: 0x10 BYTE
  */
 int bipush_byte(unsigned char byte) {
@@ -305,7 +306,7 @@ int bipush_byte(unsigned char byte) {
 /**
  * Increments stack by 1
  *
- * dconst_1
+ * bipush IDENTIFIER
  * OPC: 0x10 IDENTIFIER
  */
 int bipush_identifier(char *identifier) {
@@ -328,7 +329,114 @@ int bipush_identifier(char *identifier) {
         return CF_NOTOK;
     }
     
-    return bipush_byte(((symbol *)s)->value.byte);
+    return bipush_byte(((symbol *)s)->value.byte_val);
+}
+
+/**
+ * Increments stack by 1
+ *
+ * sipush INT
+ * OPC: 0x11 INT
+ */
+int sipush_short(int value) {
+    unsigned char bytes[3];
+
+    if((value < 0) || (value > 65535)) {
+        debug(DBG_ERROR, "sipush_short: Invalid  value %d. Short expected", value);
+        return CF_NOTOK;
+    }
+
+    bytes[0] = 0x11;
+    bytes[1] = (value & 0x0000FF00) >> 8;
+    bytes[2] = value & 0x000000FF;
+    buffer_append(code, bytes, 3);
+
+    debug(DBG_ERROR, "sipush_short: 0x%02X 0x%02X", bytes[1], bytes[2]);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * sipush IDENTIFIER
+ * OPC: 0x11 IDENTIFIER
+ */
+int sipush_identifier(char *identifier) {
+    symbol    *s;
+    symbol    *tmp;
+    
+    tmp = symbol_new(identifier);
+    
+    s = dllist_find(symbols_list, tmp);
+    
+    symbol_free(tmp);
+    
+    if(s == NULL) {
+        debug(DBG_ERROR, "sipush_identifier: identifier %s not found", identifier);
+        return CF_NOTOK;
+    }
+
+    if(((symbol *)s)->type != SYM_INT) {
+        debug(DBG_ERROR, "sipush_identifier: identifier %s not of type INT", identifier);
+        return CF_NOTOK;
+    }
+    
+    return bipush_byte(((symbol *)s)->value.int_val);
+}
+
+/**
+ * Increments stack by 1
+ *
+ * ldc BYTE
+ * OPC: 0x12 BYTE
+ */
+int ldc_byte(ClassFile *cf, unsigned char byte) {
+    unsigned char bytes[2];
+
+    if(byte > cf->constant_pool_count) {
+        debug(DBG_WARN, "ldc_byte: Byte %d for ldc is not a valid index inside" 
+                        " the constant pool", byte);
+    }
+
+    bytes[0] = 0x12;
+    bytes[1] = byte;
+    buffer_append(code, bytes, 2);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * ldc IDENTIFIER
+ * OPC: 0x12 IDENTIFIER
+ */
+int ldc_identifier(ClassFile *cf, char *identifier) {
+    symbol    *s;
+    symbol    *tmp;
+    
+    tmp = symbol_new(identifier);
+    
+    s = dllist_find(symbols_list, tmp);
+    
+    symbol_free(tmp);
+    
+    if(s == NULL) {
+        debug(DBG_ERROR, "ldc_identifier: identifier %s not found", identifier);
+        return CF_NOTOK;
+    }
+
+    if((((symbol *)s)->type != SYM_INT) && (((symbol *)s)->type != SYM_INT)) {
+        debug(DBG_ERROR, "ldc_identifier: identifier %s not of type INT or STRING", identifier);
+        return CF_NOTOK;
+    }
+    
+    return ldc_byte(cf, ((symbol *)s)->cp_index);
 }
 
 /*****************************************************************************/
@@ -481,7 +589,7 @@ int create_int(ClassFile *cf, char *identifier, int value) {
     index = RC_CPAddInteger(cf, (u4)value);
     
     s->cp_index = index;
-    s->value.i = value;
+    s->value.int_val = value;
     
     dllist_add(symbols_list, (void *)s);
     
@@ -504,7 +612,7 @@ int create_byte(ClassFile *cf, char *identifier, unsigned char value) {
         return CF_NOTOK;
     }
  
-    s->value.byte = value;
+    s->value.byte_val = value;
     
     dllist_add(symbols_list, (void *)s);
     
@@ -544,5 +652,5 @@ int compile(ClassFile *cf, char *file_path) {
 }
 
 void yyerror(const char *s) {
-    printf("Error on token: %s\n", s);
+    printf("Line %d -> Error on token: %s\n", line, s);
 }

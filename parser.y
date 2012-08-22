@@ -6,6 +6,8 @@
 
 #define YYPARSE_PARAM cf
 
+extern int line;
+
 %}
 
 %union {
@@ -13,26 +15,29 @@
     int int_val;
     double double_val;
     char *str_val;
+    
     char *identifier;
     char *param;
     int visibility;
 }
 
-%token <int_val>    INT
-%token <double_val> DOUBLE
-%token <str_val>    STRING
-%token <byte_val>   BYTE
+%token <byte_val>    BYTE
+%token <int_val>     INT
+%token <double_val>  DOUBLE
+%token <str_val>     STRING
+
 
 
 /* General asm identifiers */
+%token VAR_BYTE
 %token VAR_INT
 %token VAR_STRING
 %token VAR_DOUBLE
-%token VAR_BYTE
 
 %token <identifier> IDENTIFIER
 
 %token METHOD_START
+%token <identifier> METHOD_IDENTIFIER
 %token <param> PARAMS
 %token METHOD_END
 %token <visibility> VISIBILITY
@@ -291,7 +296,8 @@ identifiers:
     ;
 
 var_int:
-    VAR_INT IDENTIFIER INT      { if(create_int((ClassFile *)cf, $2, $3) < 0) YYABORT; }
+    VAR_INT IDENTIFIER BYTE     { if(create_int((ClassFile *)cf, $2, (int)$3) < 0) YYABORT; }
+    | VAR_INT IDENTIFIER INT    { if(create_int((ClassFile *)cf, $2, $3) < 0) YYABORT; }
     | VAR_INT IDENTIFIER        { if(create_int((ClassFile *)cf, $2, 0)  < 0) YYABORT; }
     ;
 
@@ -316,7 +322,7 @@ methods:
     ;
 
 method_start:
-    METHOD_START IDENTIFIER PARAMS { if(method_start((ClassFile *)cf, $2, $3) < 0) YYABORT; }
+    METHOD_START METHOD_IDENTIFIER PARAMS { if(method_start((ClassFile *)cf, $2, $3) < 0) YYABORT; }
     ;
     
 method_body:
@@ -352,9 +358,9 @@ opcode:
     | dconst_0
     | dconst_1
     | bipush
-/*
     | sipush
     | ldc
+/*
     | ldc_w
     | ldc2_w
     | iload
@@ -1013,6 +1019,15 @@ bipush:
     | BIPUSH IDENTIFIER      { if(bipush_identifier($2) != CF_OK) { free($2); YYABORT; } free($2); }
     ;
     
+sipush:
+    SIPUSH INT               { if(sipush_short($2) != CF_OK) YYABORT; }
+    | SIPUSH IDENTIFIER      { if(sipush_identifier($2) != CF_OK) { free($2); YYABORT; } free($2); }
+    ;
+
+ldc:
+    LDC BYTE                 { if(ldc_byte((ClassFile *)cf, $2) != CF_OK) YYABORT; }
+    | LDC IDENTIFIER           { if(ldc_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }
+    ;
 
 return:
     RETURN                   { if(jreturn() != CF_OK) YYABORT; }

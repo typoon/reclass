@@ -20,10 +20,10 @@ typedef struct _symbol {
     int   type;
     int   cp_index;
     union {
-        unsigned char byte;
-        int i;
-        double d;
-        char *str;
+        unsigned char byte_val;
+        int int_val;
+        double double_val;
+        char *str_val;
     } value;
 } symbol;
 

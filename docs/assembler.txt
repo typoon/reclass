@@ -101,6 +101,7 @@ Directives
 <b>.byte</b>
     Creates an alias to a byte. The value created by this directive will be
     replaced directly by its value in the compiled code.
+    The accepted values for this type are between 0 and 255 or 0x00 and 0xFF.
 
     For example, suppose the following code:
 
@@ -311,8 +312,37 @@ assembly
 <b>bipush <byte></b>
 <b>bipush $identifier</b>
     Pushes <byte> or the value of $identifier to the stack.
+    $identifier needs to be of type .byte
     The max_stack attribute is automatically incremented by this operation
 
+    Example:
+    <syntaxhighlight lang="jasm">
+        .method main ([Ljava/lang/String;)V
+            .byte $myByte 123
+            
+            bipush 0x42
+            bipush $myByte
+        .method_end
+    </syntaxhighlight>
+
+<b>sipush <short></b>
+<b>sipush $identifier</b>
+    Pushes <short> or the value of $identifier to the stack.
+    $identifier needs to be of type .int
+    Even thou the <short> type is not specified, it is expected that the value
+    of the int identifier to be between 0x0000 and 0xFFFF. Otherwise an error
+    is thrown.
+    The max_stack attribute is automatically incremented by this operation
+
+    Example:
+    <syntaxhighlight lang="jasm">
+        .method main ([Ljava/lang/String;)V
+            .int $myShort 1234
+            
+            sipush 0x4201
+            sipush $myShort
+        .method_end
+    </syntaxhighlight>
 
 <b></b>
 <b></b>
