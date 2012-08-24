@@ -33,6 +33,7 @@ extern int line;
 %token VAR_INT
 %token VAR_STRING
 %token VAR_DOUBLE
+%token DEREF
 
 %token <identifier> IDENTIFIER
 
@@ -360,9 +361,10 @@ opcode:
     | bipush
     | sipush
     | ldc
-/*
     | ldc_w
+/*
     | ldc2_w
+
     | iload
     | lload
     | fload
@@ -1026,8 +1028,20 @@ sipush:
 
 ldc:
     LDC BYTE                 { if(ldc_byte((ClassFile *)cf, $2) != CF_OK) YYABORT; }
-    | LDC IDENTIFIER           { if(ldc_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }
+    | LDC IDENTIFIER         { if(ldc_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }
+    | LDC DEREF IDENTIFIER   { if(ldc_deref_identifier((ClassFile *)cf, $3) != CF_OK) { free($3); YYABORT; } free($3); }
     ;
+
+ldc_w:
+      LDC_W INT              { if(ldcw_short((ClassFile *)cf, $2) != CF_OK) YYABORT; }
+    | LDC_W IDENTIFIER       { if(ldcw_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }
+    /*| LDC_W DEREF IDENTIFIER { if(ldcw_deref_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }*/
+
+/*
+ldc2_w:
+      LDC2_W INT             { if(ldc2w_short((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }
+    | LDC2_W IDENTIFIER      { if(ldc2w_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }
+*/
 
 return:
     RETURN                   { if(jreturn() != CF_OK) YYABORT; }
@@ -1038,6 +1052,7 @@ getstatic:
     | GETSTATIC BYTE         { if(getstatic_int((ClassFile *)cf, (int)$2) != CF_OK) YYABORT;   }
     | GETSTATIC IDENTIFIER   { if(getstatic_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }
     ;
+
 
 pop:
     POP                      { if(pop() != CF_OK) YYABORT; }

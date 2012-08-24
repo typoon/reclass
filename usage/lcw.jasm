@@ -1,0 +1,8 @@
+.int $myInt 10
+
+.method main ([Ljava/lang/String;)V
+    ldc 0x31
+    ldc $myInt
+    ldc *$myInt
+    return
+.method_end

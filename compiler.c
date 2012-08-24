@@ -351,8 +351,6 @@ int sipush_short(int value) {
     bytes[2] = value & 0x000000FF;
     buffer_append(code, bytes, 3);
 
-    debug(DBG_ERROR, "sipush_short: 0x%02X 0x%02X", bytes[1], bytes[2]);
-
     current_max_stack += 1;
 
     return CF_OK;
@@ -384,7 +382,7 @@ int sipush_identifier(char *identifier) {
         return CF_NOTOK;
     }
     
-    return bipush_byte(((symbol *)s)->value.int_val);
+    return sipush_short(((symbol *)s)->value.int_val);
 }
 
 /**
@@ -431,12 +429,112 @@ int ldc_identifier(ClassFile *cf, char *identifier) {
         return CF_NOTOK;
     }
 
-    if((((symbol *)s)->type != SYM_INT) && (((symbol *)s)->type != SYM_INT)) {
-        debug(DBG_ERROR, "ldc_identifier: identifier %s not of type INT or STRING", identifier);
+    if((((symbol *)s)->type != SYM_INT) && (((symbol *)s)->type != SYM_STR)) {
+        debug(DBG_ERROR, "ldc_identifier: identifier %s not of type INT or "
+                         "STRING", identifier);
+        return CF_NOTOK;
+    }
+
+    if(((symbol *)s)->cp_index > 255) {
+        debug(DBG_ERROR, "ldc_identifier: identifier %s is in an index greater"
+                         " than 255 in the constant pool. Use ldc_w instead",
+                         identifier);
         return CF_NOTOK;
     }
     
     return ldc_byte(cf, ((symbol *)s)->cp_index);
+}
+
+int ldc_deref_identifier(ClassFile *cf, char *identifier) {
+    symbol    *s;
+    symbol    *tmp;
+    
+    tmp = symbol_new(identifier);
+    
+    s = dllist_find(symbols_list, tmp);
+    
+    symbol_free(tmp);
+    
+    if(s == NULL) {
+        debug(DBG_ERROR, "ldc_deref_identifier: identifier %s not found", identifier);
+        return CF_NOTOK;
+    }
+
+    if((((symbol *)s)->type != SYM_INT) && (((symbol *)s)->type != SYM_BYTE)) {
+        debug(DBG_ERROR, "ldc_deref_identifier: identifier %s not of type INT or BYTE", identifier);
+        return CF_NOTOK;
+    }
+
+    if(((symbol *)s)->type == SYM_INT) {
+        if(((symbol *)s)->value.int_val > 255) {
+            debug(DBG_ERROR, "ldc_deref_identifier: identifier %s has a value "
+                             "greater than 255. Use ldc_w instead", identifier);
+
+            return CF_NOTOK;
+        }
+        
+        return ldc_byte(cf, (unsigned char)((symbol *)s)->value.int_val);
+    }
+    
+    return ldc_byte(cf, ((symbol *)s)->value.byte_val);
+}
+
+/**
+ * Increments stack by 1
+ *
+ * ldc_w SHORT
+ * OPC: 0x13 SHORT
+ */
+int ldcw_short(ClassFile *cf, int value) {
+    unsigned char bytes[3];
+
+    if((value < 0) || (value > 65535)) {
+        debug(DBG_ERROR, "ldcw_short: Invalid  value %d. Short expected", value);
+        return CF_NOTOK;
+    }
+
+    if(value > cf->constant_pool_count) {
+        debug(DBG_WARN, "ldcw_short: Shprt %d for ldcw is not a valid index" 
+                        " inside the constant pool", value);
+    }
+
+    bytes[0] = 0x13;
+    bytes[1] = (value & 0x0000FF00) >> 8;
+    bytes[2] = value & 0x000000FF;
+    buffer_append(code, bytes, 3);
+
+    current_max_stack += 1;
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * ldc_w IDENTIFIER
+ * OPC: 0x13 IDENTIFIER
+ */
+int ldcw_identifier(ClassFile *cf, char *identifier) {
+    symbol    *s;
+    symbol    *tmp;
+    
+    tmp = symbol_new(identifier);
+    
+    s = dllist_find(symbols_list, tmp);
+    
+    symbol_free(tmp);
+    
+    if(s == NULL) {
+        debug(DBG_ERROR, "ldcw_identifier: identifier %s not found", identifier);
+        return CF_NOTOK;
+    }
+
+    if((((symbol *)s)->type != SYM_INT) && (((symbol *)s)->type != SYM_INT)) {
+        debug(DBG_ERROR, "ldcw_identifier: identifier %s not of type INT or STRING", identifier);
+        return CF_NOTOK;
+    }
+    
+    return ldcw_short(cf, ((symbol *)s)->cp_index);
 }
 
 /*****************************************************************************/
@@ -570,14 +668,14 @@ int method_end(ClassFile *cf) {
 
 int create_int(ClassFile *cf, char *identifier, int value) {
     
-    int index;
+    unsigned short index;
     symbol *s;
     
     s = symbol_new(identifier);
     s->type = SYM_INT;
     
     if(dllist_find(symbols_list, s)) {
-        debug(DBG_ERROR, "Symbol %s already declared. Aborting...\n",
+        debug(DBG_ERROR, "Symbol %s already declared. Aborting...",
               identifier);
         
         symbol_free(s);
@@ -587,6 +685,12 @@ int create_int(ClassFile *cf, char *identifier, int value) {
 
 
     index = RC_CPAddInteger(cf, (u4)value);
+
+    if(index == CF_NOTOK) {
+        debug(DBG_ERROR, "Could not create symbol %s. Too many values inside "
+                         "the constant_pool.");
+        return CF_NOTOK;
+    }
     
     s->cp_index = index;
     s->value.int_val = value;

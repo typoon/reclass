@@ -121,14 +121,21 @@ Directives
 
 <b>.int</b>
     Creates a CONSTANT_INTEGER in the constant_pool and allows the variable to
-    be used in the assembly code as a reference to the created variable.
+    be used in the assembly code as a reference to the created entry in the
+    constant pool.
+    Whenever an instruction that takes an identifier as a parameter uses a
+    .int identifier, the value that this instruction will use is the index of
+    the constant pool of this identifier. If you need/want to use the value of
+    the constant instead, prepend an * to the identifier name.
 
     Example:
 
     .method_start myMethod ()V
-        .int $myInt 1234
+        .int $myInt 233   ; Creates a CONSTANT_INTEGER in index 39 of the
+                          ; constant_pool
         
-        ldc $myInt
+        ldc $myInt        ; Loads the value 39 to the stack
+        ldc *$myInt       ; Loads the value 233 to the stack
     .end_method
     
 
@@ -140,7 +147,7 @@ assembly
     Example:
 
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
         .method_end
     </syntaxhighlight>
 
@@ -150,7 +157,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             aconst_null
         .method_end
     </syntaxhighlight>
@@ -161,7 +168,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             iconst_m1
         .method_end
     </syntaxhighlight>
@@ -172,7 +179,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             iconst_0
         .method_end
     </syntaxhighlight>
@@ -183,7 +190,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             iconst_1
         .method_end
     </syntaxhighlight>
@@ -194,7 +201,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             iconst_2
         .method_end
     </syntaxhighlight>
@@ -205,7 +212,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             iconst_3
         .method_end
     </syntaxhighlight>
@@ -216,7 +223,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             iconst_4
         .method_end
     </syntaxhighlight>
@@ -227,7 +234,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             iconst_5
         .method_end
     </syntaxhighlight>
@@ -238,7 +245,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             lconst_0
         .method_end
     </syntaxhighlight>
@@ -249,7 +256,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             lconst_1
         .method_end
     </syntaxhighlight>
@@ -260,7 +267,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             fconst_0
         .method_end
     </syntaxhighlight>
@@ -271,7 +278,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             fconst_1
         .method_end
     </syntaxhighlight>
@@ -282,7 +289,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             fconst_2
         .method_end
     </syntaxhighlight>
@@ -293,7 +300,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             dconst_0
         .method_end
     </syntaxhighlight>
@@ -304,7 +311,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             dconst_1
         .method_end
     </syntaxhighlight>
@@ -317,7 +324,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             .byte $myByte 123
             
             bipush 0x42
@@ -328,7 +335,9 @@ assembly
 <b>sipush <short></b>
 <b>sipush $identifier</b>
     Pushes <short> or the value of $identifier to the stack.
-    $identifier needs to be of type .int
+    $identifier needs to be of type .int and the value being pushed is the
+    value assigned to the identifier, not the constant_pool index that could
+    have been created by it.
     Even thou the <short> type is not specified, it is expected that the value
     of the int identifier to be between 0x0000 and 0xFFFF. Otherwise an error
     is thrown.
@@ -336,7 +345,7 @@ assembly
 
     Example:
     <syntaxhighlight lang="jasm">
-        .method main ([Ljava/lang/String;)V
+        .method_start myMethod ()V
             .int $myShort 1234
             
             sipush 0x4201

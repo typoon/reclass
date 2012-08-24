@@ -18,7 +18,7 @@ typedef struct _symbol {
     char *name;
     char *signature; // used only when type = SYM_METHOD
     int   type;
-    int   cp_index;
+    unsigned short cp_index;
     union {
         unsigned char byte_val;
         int int_val;

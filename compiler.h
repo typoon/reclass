@@ -37,11 +37,15 @@ int dconst1();
 int bipush_byte(unsigned char byte);
 int bipush_identifier(char *identifier);
 
-int sipush_short(int s);
+int sipush_short(int value);
 int sipush_identifier(char *identifier);
 
 int ldc_byte(ClassFile *cf, unsigned char byte);
 int ldc_identifier(ClassFile *cf, char *identifier);
+int ldc_deref_identifier(ClassFile *cf, char *identifier);
+
+int ldcw_short(ClassFile *cf, int value);
+int ldcw_identifier(ClassFile *cf, char *identifier);
 
 int jreturn();
 int getstatic_int(ClassFile *cf, int index);

@@ -91,6 +91,12 @@ int RC_CPAddInteger(ClassFile *cf, u4 value)
     int index;
 
     index = cf->constant_pool_count;
+
+    if((index + 1) > 65534) {
+        debug(DBG_ERROR, "Trying to insert too many items into the constant_pool");
+        return CF_NOTOK;
+    }
+    
     cf->constant_pool_count += 1;
 
 
