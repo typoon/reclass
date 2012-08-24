@@ -46,10 +46,13 @@ int ldc_deref_identifier(ClassFile *cf, char *identifier);
 
 int ldcw_short(ClassFile *cf, int value);
 int ldcw_identifier(ClassFile *cf, char *identifier);
+int ldcw_deref_identifier(ClassFile *cf, char *identifier);
 
 int jreturn();
+
 int getstatic_int(ClassFile *cf, int index);
 int getstatic_identifier(ClassFile *cf, char *identifier);
+
 int pop();
 
 #endif

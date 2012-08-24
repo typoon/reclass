@@ -445,6 +445,12 @@ int ldc_identifier(ClassFile *cf, char *identifier) {
     return ldc_byte(cf, ((symbol *)s)->cp_index);
 }
 
+/**
+ * Increments stack by 1
+ *
+ * ldc *IDENTIFIER
+ * OPC: 0x12 *IDENTIFIER
+ */
 int ldc_deref_identifier(ClassFile *cf, char *identifier) {
     symbol    *s;
     symbol    *tmp;
@@ -494,7 +500,7 @@ int ldcw_short(ClassFile *cf, int value) {
     }
 
     if(value > cf->constant_pool_count) {
-        debug(DBG_WARN, "ldcw_short: Shprt %d for ldcw is not a valid index" 
+        debug(DBG_WARN, "ldcw_short: Short %d for ldcw is not a valid index" 
                         " inside the constant pool", value);
     }
 
@@ -529,12 +535,53 @@ int ldcw_identifier(ClassFile *cf, char *identifier) {
         return CF_NOTOK;
     }
 
-    if((((symbol *)s)->type != SYM_INT) && (((symbol *)s)->type != SYM_INT)) {
-        debug(DBG_ERROR, "ldcw_identifier: identifier %s not of type INT or STRING", identifier);
+    if((((symbol *)s)->type != SYM_INT) && (((symbol *)s)->type != SYM_STR)) {
+        debug(DBG_ERROR, "ldcw_identifier: identifier %s not of type INT or "
+                         "STRING", identifier);
         return CF_NOTOK;
     }
-    
+
     return ldcw_short(cf, ((symbol *)s)->cp_index);
+}
+
+/**
+ * Increments stack by 1
+ *
+ * ldc_w *IDENTIFIER
+ * OPC: 0x13 *IDENTIFIER
+ */
+int ldcw_deref_identifier(ClassFile *cf, char *identifier) {
+    symbol    *s;
+    symbol    *tmp;
+    
+    tmp = symbol_new(identifier);
+    
+    s = dllist_find(symbols_list, tmp);
+    
+    symbol_free(tmp);
+    
+    if(s == NULL) {
+        debug(DBG_ERROR, "ldc_deref_identifier: identifier %s not found", identifier);
+        return CF_NOTOK;
+    }
+
+    if((((symbol *)s)->type != SYM_INT) && (((symbol *)s)->type != SYM_BYTE)) {
+        debug(DBG_ERROR, "ldc_deref_identifier: identifier %s not of type INT or BYTE", identifier);
+        return CF_NOTOK;
+    }
+
+    if(((symbol *)s)->type == SYM_INT) {
+        if(((symbol *)s)->value.int_val > 65535) {
+            debug(DBG_ERROR, "ldc_deref_identifier: identifier %s has a value "
+                             "greater than 65535.", identifier);
+
+            return CF_NOTOK;
+        }
+        
+        return ldc_byte(cf, (unsigned char)((symbol *)s)->value.int_val);
+    }
+    
+    return ldc_byte(cf, ((symbol *)s)->value.byte_val);
 }
 
 /*****************************************************************************/

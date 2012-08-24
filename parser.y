@@ -1035,7 +1035,7 @@ ldc:
 ldc_w:
       LDC_W INT              { if(ldcw_short((ClassFile *)cf, $2) != CF_OK) YYABORT; }
     | LDC_W IDENTIFIER       { if(ldcw_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }
-    /*| LDC_W DEREF IDENTIFIER { if(ldcw_deref_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }*/
+    | LDC_W DEREF IDENTIFIER { if(ldcw_deref_identifier((ClassFile *)cf, $3) != CF_OK) { free($3); YYABORT; } free($3); }
 
 /*
 ldc2_w:
