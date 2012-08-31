@@ -3,7 +3,7 @@ FLAGS=-Wall -fPIC -ggdb
 FLAGS += -DDEBUG
 
 PROG=libreclass
-OBJS=$(shell ls *.c | grep -v reclass_dumper.c | sed -e "s/\.c/.o/g")
+OBJS=$(shell ls *.c | sed -e "s/\.c/.o/g")
 HEADERS=$(shell ls *.h)
 YACC=bison
 
@@ -28,9 +28,6 @@ shared: parser $(OBJS)
 static: parser $(OBJS)
 	ar rcs bin/$(PROG).a $(OBJS)
 
-tools:
-	$(CC) $(FLAGS) reclass_dumper.c -lreclass -L./bin -I. -o bin/reclass_dumper
-
 %.o: %.c
 	$(CC) $(FLAGS) -c $<
 
@@ -42,7 +39,6 @@ clean:
 	@rm -f parser.tab.c parser.tab.h lex.yy.c
 	@rm -rf bin/*.so
 	@rm -rf bin/*.a
-	@rm -rf bin/reclass_dumper
 
 install:
 	#@mkdir $(INSTALL_INCLUDE_DIR)

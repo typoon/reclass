@@ -22,8 +22,7 @@ char *methodNameAndTypeToString(ClassFile *cf, NameAndType_info *nti);
 char *methodDescriptorIndexToString(ClassFile *cf, int index);
 char *methodrefToString(ClassFile *cf, Methodref_info *mri);
 
-char *nameIndexToString(ClassFile *cf, int index)
-{
+char *nameIndexToString(ClassFile *cf, int index) {
     int length;
     char *ret;
 
@@ -37,8 +36,7 @@ char *nameIndexToString(ClassFile *cf, int index)
     return ret;
 }
 
-char *descriptorIndexToString(ClassFile *cf, int index)
-{
+char *descriptorIndexToString(ClassFile *cf, int index) {
     int length;
     char *ret;
 
@@ -52,8 +50,7 @@ char *descriptorIndexToString(ClassFile *cf, int index)
     return ret;
 }
 
-char *fieldNameAndTypeToString(ClassFile *cf, NameAndType_info *nti)
-{
+char *fieldNameAndTypeToString(ClassFile *cf, NameAndType_info *nti) {
     int length;
     char *name;
     char *type;
@@ -73,8 +70,7 @@ char *fieldNameAndTypeToString(ClassFile *cf, NameAndType_info *nti)
     return ret;
 }
 
-char *methodNameAndTypeToString(ClassFile *cf, NameAndType_info *nti)
-{
+char *methodNameAndTypeToString(ClassFile *cf, NameAndType_info *nti) {
     int cp_index;
     char *ret;
     unsigned int i;
@@ -207,8 +203,7 @@ char *methodNameAndTypeToString(ClassFile *cf, NameAndType_info *nti)
     return ret;
 }
 
-char *fieldDescriptorIndexToString(ClassFile *cf, int index)
-{
+char *fieldDescriptorIndexToString(ClassFile *cf, int index) {
     int i;
     int length;
     char data[1024 * 10]; // 10K
@@ -287,8 +282,7 @@ char *fieldDescriptorIndexToString(ClassFile *cf, int index)
 }
 
 
-char *fieldrefToString(ClassFile *cf, Fieldref_info *fri)
-{
+char *fieldrefToString(ClassFile *cf, Fieldref_info *fri) {
     int totalLength;
     char *txt;
     char *className;
@@ -310,8 +304,7 @@ char *fieldrefToString(ClassFile *cf, Fieldref_info *fri)
     return txt;
 }
 
-char *methodrefToString(ClassFile *cf, Methodref_info *mri)
-{
+char *methodrefToString(ClassFile *cf, Methodref_info *mri) {
     int totalLength;
     char *txt;
     char *className;
@@ -333,8 +326,7 @@ char *methodrefToString(ClassFile *cf, Methodref_info *mri)
     return txt;
 }
 
-void RC_DumpClassFile(ClassFile *cf)
-{
+void RC_DumpClassFile(ClassFile *cf) {
     int i;
     int j;
     int index = 1;
@@ -495,8 +487,7 @@ void RC_DumpClassFile(ClassFile *cf)
     }
 }
 
-char* accessFlagsToString(u2 flags)
-{
+char* accessFlagsToString(u2 flags) {
     char *txt;
     txt = (char *)malloc(sizeof (char)* 128);
     memset(txt, 0, sizeof (char)* 128);
@@ -519,8 +510,7 @@ char* accessFlagsToString(u2 flags)
     return txt;
 }
 
-char* parseFieldSignature(ClassFile *cf, field_info *fi)
-{
+char* parseFieldSignature(ClassFile *cf, field_info *fi) {
     char *dump;
     char *txt;
     char parameters[512];
@@ -547,8 +537,7 @@ char* parseFieldSignature(ClassFile *cf, field_info *fi)
 
 }
 
-char* parseMethodSignature(ClassFile *cf, method_info *mi)
-{
+char* parseMethodSignature(ClassFile *cf, method_info *mi) {
     int cp_index;
     char *dump;
     char *txt;
@@ -685,8 +674,7 @@ char* parseMethodSignature(ClassFile *cf, method_info *mi)
 
 }
 
-char* dumpCodeAssembly(Code_attribute *ca)
-{
+char* dumpCodeAssembly(Code_attribute *ca) {
     int j, k;
     int total;
     char *code;
@@ -720,8 +708,7 @@ char* dumpCodeAssembly(Code_attribute *ca)
     return code;
 }
 
-void RC_DumpMethods(ClassFile *cf)
-{
+void RC_DumpMethods(ClassFile *cf) {
     int i;
     int j;
     char *txt;
@@ -761,8 +748,7 @@ void RC_DumpMethods(ClassFile *cf)
     }
 }
 
-void dumpAttribute(ClassFile *cf, attribute_info *ai)
-{
+void dumpAttribute(ClassFile *cf, attribute_info *ai) {
     int i;
     int length;
     char *txt;
@@ -803,8 +789,7 @@ void dumpAttribute(ClassFile *cf, attribute_info *ai)
     }
 }
 
-void RC_DumpInterfaces(ClassFile *cf)
-{
+void RC_DumpInterfaces(ClassFile *cf) {
     int i;
     char *txt;
 
