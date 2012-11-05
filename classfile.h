@@ -10,6 +10,12 @@ typedef unsigned char  u1;
 typedef unsigned short u2;
 typedef unsigned int   u4;
 
+// UTF8 abstraction
+typedef struct _utf8 {
+    int length;
+    char *str;
+} utf8;
+
 // JVM Constants
 #define JAVA_MAGIC 0xCAFEBABE
 

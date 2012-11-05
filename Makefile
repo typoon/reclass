@@ -1,6 +1,6 @@
 CC=gcc
 FLAGS=-Wall -fPIC -ggdb
-FLAGS += -DDEBUG
+#FLAGS += -DDEBUG
 
 PROG=libreclass
 OBJS=$(shell ls *.c | sed -e "s/\.c/.o/g")
@@ -45,5 +45,4 @@ install:
 	cp $(HEADERS) $(INSTALL_INCLUDE_DIR)
 	cp bin/*.so   $(INSTALL_LIBS_DIR)
 	cp bin/*.a    $(INSTALL_LIBS_DIR)
-	cp bin/reclass_dumper $(INSTALL_BIN_DIR)
 	ldconfig

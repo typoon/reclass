@@ -7,4 +7,8 @@ public class ex3 {
 	public static void bla() {
 		System.out.println("Oie do bla!");
 	}
+
+    private static String[] doNothing(int a, int b, boolean c, double d[]) {
+        return new String[10];
+    }
 }

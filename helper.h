@@ -1,5 +1,5 @@
-#ifndef HELPER_H_
-#define HELPER_H
+#ifndef RC_HELPER_H_
+#define RC_HELPER_H_
 
 #define DBG_WARN  0x01
 #define DBG_ERROR 0x02
@@ -56,4 +56,4 @@ void    dllist_free(dllist *l);
 void*   dllist_find(dllist *l, void *what);
 
 
-#endif
+#endif /* RC_HELPER_H_ */

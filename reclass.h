@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include "classfile.h"
+//#include "opcodes.h"
 
 
 /* classfile.c */
