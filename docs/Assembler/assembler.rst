@@ -251,6 +251,43 @@ ldc2_w
 
 .. _N:
 
+.. _newarray:
+
+newarray
+^^^^^^^^
+
+::
+
+    newarray type
+
+Pops and int from the operand stack and creates a new array in the operand 
+stack with type `type` and puts its reference (an arrayref) in the operand 
+stack. The size of the array is defined by the poped int.
+`type` can be one of the following values:
+
+* 4 - Array of boolean
+* 5 - Array of char
+* 6 - Array of float
+* 7 - Array of double
+* 8 - Array of byte
+* 9 - Array of short
+* 10 - Array of int
+* 11 - Array of long
+
+If any other value is passed a runtime error will be thrown and the execution
+will be aborted.
+
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        bipush 10    ; Array size 
+        newarray 4   ; Array type is boolean
+        return
+    .method_end
+
 .. _nop:
 
 nop

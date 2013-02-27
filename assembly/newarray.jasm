@@ -1,0 +1,5 @@
+.method main ([Ljava/lang/String;)V
+	bipush 10    ; Array size 
+    newarray 4   ; Array type is boolean
+    return
+.method_end

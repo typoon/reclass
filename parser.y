@@ -430,7 +430,9 @@ opcode:
     | bastore
     | castore
     | sastore
+*/
     | pop
+/*
     | pop2
     | dup
     | dup_x1
@@ -525,8 +527,6 @@ opcode:
     | getstatic
 /*
     | putstatic
-
-
     | getfield
     | putfield
     | invokevirtual
@@ -534,378 +534,9 @@ opcode:
     | invokestatic
     | invokeinterface
     | new
-    | newarray
-    | anewarray
-    | arraylength
-    | athrow
-    | checkcast
-    | instanceof
-    | monitorenter
-    | monitorexit
-    | wide
-    | multianewarray
-    | ifnull
-    | ifnonnull
-    | goto_w
-    | jsr_w
-    | breakpoint
-    | ldc_quick
-    | ldc_w_quick
-    | ldc2_w_quick
-    | getfield_quick
-    | putfield_quick
-    | getfield2_quick
-    | putfield2_quick
-    | getstatic_quick
-    | putstatic_quick
-    | getstatic2_quick
-    | putstatic2_quick
-    | invokevirtual_quick
-    | invokenonvirtual_quick
-    | invokesuper_quick
-    | invokestatic_quick
-    | invokeinterface_quick
-    | invokevirtualobject_quick
-    | invokeignored_quick
-    | new_quick
-    | anewarray_quick
-    | multianewarray_quick
-    | checkcast_quick
-    | instanceof_quick
-    | invokevirtual_quick_w
-    | getfield_quick_w
-    | putfield_quick_w
-    | nonnull_quick
-    | software
-    | hardware
-    | iand
-    | land
-    | ior
-    | lor
-    | ixor
-    | lxor
-    | iinc
-    | i2l
-    | i2f
-    | i2d
-    | l2i
-    | l2f
-    | l2d
-    | f2i
-    | f2l
-    | f2d
-    | d2i
-    | d2l
-    | d2f
-    | i2b
-    | i2c
-    | i2s
-    | lcmp
-    | fcmpl
-    | fcmpg
-    | dcmpl
-    | dcmpg
-    | ifeq
-    | ifne
-    | iflt
-    | ifge
-    | ifgt
-    | ifle
-    | if_icmpeq
-    | if_icmpne
-    | if_icmplt
-    | if_icmpge
-    | if_icmpgt
-    | if_icmple
-    | if_acmpeq
-    | if_acmpne
-    | goto
-    | jsr
-    | ret
-    | tableswitch
-    | lookupswitch
-    | ireturn
-    | lreturn
-    | freturn
-    | dreturn
-    | areturn
-    | return
-    | getstatic
-    | putstatic
-    | getfield
-    | putfield
-    | invokevirtual
-    | invokespecial
-    | invokestatic
-    | invokeinterface
-    | new
-    | newarray
-    | anewarray
-    | arraylength
-    | athrow
-    | checkcast
-    | instanceof
-    | monitorenter
-    | monitorexit
-    | wide
-    | multianewarray
-    | ifnull
-    | ifnonnull
-    | goto_w
-    | jsr_w
-    | breakpoint
-    | ldc_quick
-    | ldc_w_quick
-    | ldc2_w_quick
-    | getfield_quick
-    | putfield_quick
-    | getfield2_quick
-    | putfield2_quick
-    | getstatic_quick
-    | putstatic_quick
-    | getstatic2_quick
-    | putstatic2_quick
-    | invokevirtual_quick
-    | invokenonvirtual_quick
-    | invokesuper_quick
-    | invokestatic_quick
-    | invokeinterface_quick
-    | invokevirtualobject_quick
-    | invokeignored_quick
-    | new_quick
-    | anewarray_quick
-    | multianewarray_quick
-    | checkcast_quick
-    | instanceof_quick
-    | invokevirtual_quick_w
-    | getfield_quick_w
-    | putfield_quick_w
-    | nonnull_quick
-    | software
-    | hardware
-    | fload_3
-    | dload_0
-    | dload_1
-    | dload_2
-    | dload_3
-    | aload_0
-    | aload_1
-    | aload_2
-    | aload_3
-    | iaload
-    | laload
-    | faload
-    | daload
-    | aaload
-    | baload
-    | caload
-    | saload
-    | istore
-    | lstore
-    | fstore
-    | dstore
-    | astore
-    | istore_0
-    | istore_1
-    | istore_2
-    | istore_3
-    | lstore_0
-    | lstore_1
-    | lstore_2
-    | lstore_3
-    | fstore_0
-    | fstore_1
-    | fstore_2
-    | fstore_3
-    | dstore_0
-    | dstore_1
-    | dstore_2
-    | dstore_3
-    | astore_0
-    | astore_1
-    | astore_2
-    | astore_3
-    | iastore
-    | lastore
-    | fastore
-    | dastore
-    | aastore
-    | bastore
-    | castore
-    | sastore
 */
-    | pop
+    | newarray
 /*
-    | pop2
-    | dup
-    | dup_x1
-    | dup_x2
-    | dup2
-    | dup2_x1
-    | dup2_x2
-    | swap
-    | iadd
-    | ladd
-    | fadd
-    | dadd
-    | isub
-    | lsub
-    | fsub
-    | dsub
-    | imul
-    | lmul
-    | fmul
-    | dmul
-    | idiv
-    | ldiv
-    | fdiv
-    | ddiv
-    | irem
-    | lrem
-    | frem
-    | drem
-    | ineg
-    | lneg
-    | fneg
-    | dneg
-    | ishl
-    | lshl
-    | ishr
-    | lshr
-    | iushr
-    | lushr
-    | iand
-    | land
-    | ior
-    | lor
-    | ixor
-    | lxor
-    | iinc
-    | i2l
-    | i2f
-    | i2d
-    | l2i
-    | l2f
-    | l2d
-    | f2i
-    | f2l
-    | f2d
-    | d2i
-    | d2l
-    | d2f
-    | i2b
-    | i2c
-    | i2s
-    | lcmp
-    | fcmpl
-    | fcmpg
-    | dcmpl
-    | dcmpg
-    | ifeq
-    | ifne
-    | iflt
-    | ifge
-    | ifgt
-    | ifle
-    | if_icmpeq
-    | if_icmpne
-    | if_icmplt
-    | if_icmpge
-    | if_icmpgt
-    | if_icmple
-    | if_acmpeq
-    | if_acmpne
-    | goto
-    | jsr
-    | ret
-    | tableswitch
-    | lookupswitch
-    | ireturn
-    | lreturn
-    | freturn
-    | dreturn
-    | areturn
-    | return
-    | getstatic
-    | putstatic
-    | getfield
-    | putfield
-    | invokevirtual
-    | invokespecial
-    | invokestatic
-    | invokeinterface
-    | new
-    | newarray
-    | anewarray
-    | arraylength
-    | athrow
-    | checkcast
-    | instanceof
-    | monitorenter
-    | monitorexit
-    | wide
-    | multianewarray
-    | ifnull
-    | ifnonnull
-    | goto_w
-    | jsr_w
-    | breakpoint
-    | ldc_quick
-    | ldc_w_quick
-    | ldc2_w_quick
-    | getfield_quick
-    | putfield_quick
-    | getfield2_quick
-    | putfield2_quick
-    | getstatic_quick
-    | putstatic_quick
-    | getstatic2_quick
-    | putstatic2_quick
-    | invokevirtual_quick
-    | invokenonvirtual_quick
-    | invokesuper_quick
-    | invokestatic_quick
-    | invokeinterface_quick
-    | invokevirtualobject_quick
-    | invokeignored_quick
-    | new_quick
-    | anewarray_quick
-    | multianewarray_quick
-    | checkcast_quick
-    | instanceof_quick
-    | invokevirtual_quick_w
-    | getfield_quick_w
-    | putfield_quick_w
-    | nonnull_quick
-    | software
-    | hardware
-    | if_icmplt
-    | if_icmpge
-    | if_icmpgt
-    | if_icmple
-    | if_acmpeq
-    | if_acmpne
-    | goto
-    | jsr
-    | ret
-    | tableswitch
-    | lookupswitch
-    | ireturn
-    | lreturn
-    | freturn
-    | dreturn
-    | areturn
-    | return
-    | getstatic
-    | putstatic
-    | getfield
-    | putfield
-    | invokevirtual
-    | invokespecial
-    | invokestatic
-    | invokeinterface
-    | new
-    | newarray
     | anewarray
     | arraylength
     | athrow
@@ -1034,7 +665,7 @@ ldc:
     ;
 
 ldc_w:
-      LDC_W INT              { if(ldcw_short((ClassFile *)cf, $2) != CF_OK) YYABORT; }
+    LDC_W INT                { if(ldcw_short((ClassFile *)cf, $2) != CF_OK) YYABORT; }
     | LDC_W IDENTIFIER       { if(ldcw_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }
     | LDC_W DEREF IDENTIFIER { if(ldcw_deref_identifier((ClassFile *)cf, $3) != CF_OK) { free($3); YYABORT; } free($3); }
 
@@ -1043,9 +674,13 @@ return:
     ;
 
 getstatic:
-      GETSTATIC INT          { if(getstatic_int((ClassFile *)cf, $2) != CF_OK) YYABORT;        }
+    GETSTATIC INT            { if(getstatic_int((ClassFile *)cf, $2) != CF_OK) YYABORT;        }
     | GETSTATIC BYTE         { if(getstatic_int((ClassFile *)cf, (int)$2) != CF_OK) YYABORT;   }
     | GETSTATIC IDENTIFIER   { if(getstatic_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }
+    ;
+
+newarray:
+    NEWARRAY BYTE            { if(newarray_int((ClassFile *)cf, (int)$2) != CF_OK) YYABORT; }
     ;
 
 

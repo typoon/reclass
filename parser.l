@@ -80,6 +80,7 @@ int line = 1;
     ldc2_w                         { return LDC2_W;                               }
     return                         { return RETURN;                               }
     getstatic                      { return GETSTATIC;                            }
+    newarray                       { return NEWARRAY;                             }
     pop                            { return POP;                                  }
     invokevirtual                  { return INVOKEVIRTUAL;                        }
     invokestatic                   { return INVOKESTATIC;                         }

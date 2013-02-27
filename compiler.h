@@ -53,6 +53,8 @@ int jreturn();
 int getstatic_int(ClassFile *cf, int index);
 int getstatic_identifier(ClassFile *cf, char *identifier);
 
+int newarray_int(ClassFile *cf, int type);
+
 int pop();
 
 #endif

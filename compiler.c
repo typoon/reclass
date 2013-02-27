@@ -663,6 +663,16 @@ int getstatic_identifier(ClassFile *cf, char *identifier) {
     
 }
 
+int newarray_int(ClassFile *cf, int type) {
+    unsigned char bytes[2];
+    
+    bytes[0] = 0xBC;
+    bytes[1] = (type & 0x000000FF);
+    buffer_append(code, bytes, 2);
+
+    return CF_OK;
+}
+
 int pop() {
     unsigned char bytes[1];
     
