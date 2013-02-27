@@ -393,7 +393,9 @@ opcode:
     | laload
     | faload
     | daload
+*/
     | aaload
+/*
     | baload
     | caload
     | saload
@@ -668,6 +670,10 @@ ldc_w:
     LDC_W INT                { if(ldcw_short((ClassFile *)cf, $2) != CF_OK) YYABORT; }
     | LDC_W IDENTIFIER       { if(ldcw_identifier((ClassFile *)cf, $2) != CF_OK) { free($2); YYABORT; } free($2); }
     | LDC_W DEREF IDENTIFIER { if(ldcw_deref_identifier((ClassFile *)cf, $3) != CF_OK) { free($3); YYABORT; } free($3); }
+
+aaload:
+    AALOAD                   { if(aaload((ClassFile *)cf) != CF_OK) YYABORT; }
+    ;
 
 return:
     RETURN                   { if(jreturn() != CF_OK) YYABORT; }

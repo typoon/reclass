@@ -584,6 +584,19 @@ int ldcw_deref_identifier(ClassFile *cf, char *identifier) {
     return ldc_byte(cf, ((symbol *)s)->value.byte_val);
 }
 
+/**
+ * aaload
+ * OPC: 0x32
+ */
+int aaload(ClassFile *cf) {
+    unsigned char bytes[1];
+    
+    bytes[0] = 0x32;
+    buffer_append(code, bytes, 1);
+
+    return CF_OK;
+}
+
 /*****************************************************************************/
 
 /**
@@ -663,6 +676,10 @@ int getstatic_identifier(ClassFile *cf, char *identifier) {
     
 }
 
+/**
+ * newarray type
+ * OPC: 0xBC TYPE
+ */
 int newarray_int(ClassFile *cf, int type) {
     unsigned char bytes[2];
     

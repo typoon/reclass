@@ -99,6 +99,35 @@ Mnemonics Index
 Mnemonics
 ---------
 
+Below a list of all available mnemonics for the JVM.
+Whenever the stack is mentioned or demonstrated, it should be interpreted as
+follows:
+
+**Stack**
+
+::
+
+    itemX  <--- This is the top of the stack
+    itemY
+    itemZ  
+    ...    <-- This is the bottom of the stack, means that there are
+               many other items on it that are not displayed as they are
+               not relevant to current example
+
+In the examples the stack will usually be illustrated like this:
+
+::
+
+    Before:
+        index
+        arrayref
+
+    After:
+        value
+
+Meaning that before the instruction was executed the stack had 2 items on it
+and after the execution it has only 1 item.
+
 .. _A:
 
 .. _aconst_null:
@@ -112,10 +141,40 @@ aconst_null
 
 Pushes a null value to the stack
 
-.. _add:
+.. _aaload:
 
-add
-^^^
+aaload
+^^^^^^
+
+Loads the value from an array into the operand stack.
+The stack has to have the index at the top followed by the arrayref prior to
+executing this instruction.
+
+**Stack**
+
+*Before:*
+    index
+    arrayref
+
+*After:*
+    value
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        bipush 10    ; Array size 
+        newarray 4   ; Array type is boolean
+
+        ; At this point the arrayref is at the top
+        ; of the stack
+
+        bipush 3     ; Index to be retrieved
+        aaload       ; Retrieve value from array
+        return
+    .method_end
+
 .. _B:
 
 .. _bipush:
@@ -260,7 +319,7 @@ newarray
 
     newarray type
 
-Pops and int from the operand stack and creates a new array in the operand 
+Pops an int from the operand stack and creates a new array in the operand 
 stack with type `type` and puts its reference (an arrayref) in the operand 
 stack. The size of the array is defined by the poped int.
 `type` can be one of the following values:
@@ -277,6 +336,15 @@ stack. The size of the array is defined by the poped int.
 If any other value is passed a runtime error will be thrown and the execution
 will be aborted.
 
+**Stack**
+
+::
+
+    Before:
+        size
+
+    After:
+        arrayref
 
 **Example**
 
@@ -292,6 +360,21 @@ will be aborted.
 
 nop
 ^^^
+
+::
+
+    nop
+
+This is the No OPeration opcode.
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        nop
+        return
+    .method_end
 
 .. _O:
 

@@ -1,0 +1,11 @@
+.method main ([Ljava/lang/String;)V
+	bipush 10    ; Array size 
+    newarray 4   ; Array type is boolean
+
+    ; At this point the arrayref is at the top
+    ; of the stack
+
+    bipush 3     ; Index to be retrieved
+    aaload       ; Retrieve value from array
+    return
+.method_end

@@ -78,6 +78,7 @@ int line = 1;
     ldc                            { return LDC;                                  }
     ldc_w                          { return LDC_W;                                }
     ldc2_w                         { return LDC2_W;                               }
+    aaload                         { return AALOAD;                               }
     return                         { return RETURN;                               }
     getstatic                      { return GETSTATIC;                            }
     newarray                       { return NEWARRAY;                             }
