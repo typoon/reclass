@@ -19,11 +19,12 @@ and are here to help the developer
 
 ::
 
-    .byte $identifier value
+    .byte $identifier [value]
 
 Creates a `byte` constant to be referenced in the assembly code. During the
 compilation process the identifier used in the code is replaced by its value.
-No new entry in the constant pool is created by this directive
+No new entry in the constant pool is created by this directive.
+If *value* is not provided, the identifier is initialized to 0 automatically.
 
 **Example**
 
@@ -42,9 +43,10 @@ No new entry in the constant pool is created by this directive
 
 ::
 
-    .int $identifier value
+    .int $identifier [value]
 
 Creates an `int` constant in the constant pool.
+If *value* is not provided, the identifier is initialized to 0 automatically.
 
 **Example**
 
@@ -128,15 +130,91 @@ call
 ^^^^
 .. _D:
 
+.. _dconst_0:
+
+dconst_0
+^^^^^^^^
+
+.. _dconst_1:
+
+dconst_1
+^^^^^^^^
+
 .. _E:
 
 .. _F:
 
+.. _fconst_0:
+
+fconst_0
+^^^^^^^^
+
+.. _fconst_1:
+
+fconst_1
+^^^^^^^^
+
+.. _fconst_2:
+
+fconst_2
+^^^^^^^^
+
 .. _G:
+
+.. _getstatic:
+
+getstatic
+^^^^^^^^^
 
 .. _H:
 
 .. _I:
+
+.. _iconst_m1:
+
+iconst_m1
+^^^^^^^^^
+
+.. _iconst_0:
+
+iconst_0
+^^^^^^^^
+
+.. _iconst_1:
+
+iconst_1
+^^^^^^^^
+
+.. _iconst_2:
+
+iconst_2
+^^^^^^^^
+
+.. _iconst_3:
+
+iconst_3
+^^^^^^^^
+
+.. _iconst_4:
+
+iconst_4
+^^^^^^^^
+
+.. _iconst_5:
+
+iconst_5
+^^^^^^^^
+
+.. _invokevirtual:
+
+invokevirtual
+^^^^^^^^^^^^^
+
+.. _invokestatic:
+
+invokestatic
+^^^^^^^^^^^^
+
 
 .. _J:
 
@@ -144,19 +222,62 @@ call
 
 .. _L:
 
+.. _lconst_0:
+
+lconst_0
+^^^^^^^^
+
+.. _lconst_1:
+
+lconst_1
+^^^^^^^^
+
+.. _ldc:
+
+ldc
+^^^
+
+.. _ldc_w:
+
+ldc_w
+^^^^^
+
+.. _ldc2_w:
+
+ldc2_w
+^^^^^^
+
 .. _M:
 
 .. _N:
+
+.. _nop:
+
+nop
+^^^
 
 .. _O:
 
 .. _P:
 
+.. _pop:
+
+pop
+^^^
 .. _Q:
 
 .. _R:
 
+.. _return:
+
+return
+^^^^^^
 .. _S:
+
+.. _sipush:
+
+sipush
+^^^^^^
 
 .. _T:
 
