@@ -146,18 +146,20 @@ Pushes a null value to the stack
 aaload
 ^^^^^^
 
-Loads the value from an array into the operand stack.
+Loads an arrayref from an array into the operand stack.
 The stack has to have the index at the top followed by the arrayref prior to
 executing this instruction.
 
 **Stack**
 
-*Before:*
-    index
-    arrayref
+::
 
-*After:*
-    value
+    Before:
+        index
+        arrayref
+
+    After:
+        value
 
 **Example**
 
@@ -198,6 +200,38 @@ dconst_0
 
 dconst_1
 ^^^^^^^^
+
+.. _dup:
+
+dup
+^^^
+
+::
+
+    dup
+
+Duplicates the top value of the stack
+
+**Stack**
+
+::
+
+    Before:
+        value
+
+    After:
+        value
+        value
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        bipush 10
+        dup
+        return
+    .method_end
 
 .. _E:
 
@@ -384,6 +418,64 @@ This is the No OPeration opcode.
 
 pop
 ^^^
+
+Pops an item from the top of the operand stack.
+
+**Stack**
+
+::
+
+    Before:
+        value1
+        value2
+        ...
+
+    After:
+        value2
+        ...
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        bipush 10
+        dup
+        pop
+        return
+    .method_end
+
+.. _pop2:
+
+pop2
+^^^^
+
+If the operand stack has two or more items on it, pops the 2 items in the top
+from it. If only one item is available, then this is poped.
+
+**Stack**
+
+::
+
+    Before:
+        value1
+        value2
+        value3
+
+    After:
+        value3
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        bipush 10
+        dup
+        pop2
+        return
+    .method_end
+
 .. _Q:
 
 .. _R:

@@ -7,3 +7,10 @@ nbproject
 nbproject/
 post
 docs/_build
+rcdump
+lex.yy.c
+parser.tab.c
+parser.tab.h
+usage/ex3
+usage/ex2
+usage/ex1

@@ -83,6 +83,8 @@ int line = 1;
     getstatic                      { return GETSTATIC;                            }
     newarray                       { return NEWARRAY;                             }
     pop                            { return POP;                                  }
+    pop2                           { return POP2;                                 }
+    dup                            { return DUP;                                  }
     invokevirtual                  { return INVOKEVIRTUAL;                        }
     invokestatic                   { return INVOKESTATIC;                         }
 

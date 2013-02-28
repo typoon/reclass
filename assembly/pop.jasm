@@ -1,0 +1,6 @@
+.method main ([Ljava/lang/String;)V
+	bipush 10
+	dup
+	pop
+	return
+.method_end

@@ -588,7 +588,7 @@ int ldcw_deref_identifier(ClassFile *cf, char *identifier) {
  * aaload
  * OPC: 0x32
  */
-int aaload(ClassFile *cf) {
+int aaload() {
     unsigned char bytes[1];
     
     bytes[0] = 0x32;
@@ -680,7 +680,7 @@ int getstatic_identifier(ClassFile *cf, char *identifier) {
  * newarray type
  * OPC: 0xBC TYPE
  */
-int newarray_int(ClassFile *cf, int type) {
+int newarray_int(int type) {
     unsigned char bytes[2];
     
     bytes[0] = 0xBC;
@@ -690,11 +690,57 @@ int newarray_int(ClassFile *cf, int type) {
     return CF_OK;
 }
 
+/**
+ * anewarray index
+ * OPC: 0xBD INDEXBYTE1 INDEXBYTE2
+ */
+int anewarray_int(int index) {
+
+    // Not sure yet...
+
+    return CF_OK;
+
+}
+
+/**
+ * pop
+ * OPC: 0x57
+ */
 int pop() {
     unsigned char bytes[1];
     
     bytes[0] = 0x57;
     buffer_append(code, bytes, 1);
+
+    return CF_OK;
+}
+
+/**
+ * pop2
+ * OPC: 0x58
+ */
+int pop2() {
+    unsigned char bytes[1];
+    
+    bytes[0] = 0x58;
+    buffer_append(code, bytes, 1);
+
+    return CF_OK;
+}
+
+/**
+ * Increments stack by 1
+ *
+ * dup
+ * OPC: 0x59
+ */
+int dup() {
+    unsigned char bytes[1];
+    
+    bytes[0] = 0x59;
+    buffer_append(code, bytes, 1);
+
+    current_max_stack += 1;
 
     return CF_OK;
 }

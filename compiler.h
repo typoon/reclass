@@ -48,15 +48,19 @@ int ldcw_short(ClassFile *cf, int value);
 int ldcw_identifier(ClassFile *cf, char *identifier);
 int ldcw_deref_identifier(ClassFile *cf, char *identifier);
 
-int aaload(ClassFile *cf);
+int aaload();
 
 int jreturn();
 
 int getstatic_int(ClassFile *cf, int index);
 int getstatic_identifier(ClassFile *cf, char *identifier);
 
-int newarray_int(ClassFile *cf, int type);
+int newarray_int(int type);
+
+int anewarray_int(int index);
 
 int pop();
+int pop2();
+int dup();
 
 #endif

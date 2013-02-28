@@ -434,9 +434,9 @@ opcode:
     | sastore
 */
     | pop
-/*
     | pop2
     | dup
+/*
     | dup_x1
     | dup_x2
     | dup2
@@ -538,8 +538,8 @@ opcode:
     | new
 */
     | newarray
-/*
     | anewarray
+/*
     | arraylength
     | athrow
     | checkcast
@@ -672,7 +672,7 @@ ldc_w:
     | LDC_W DEREF IDENTIFIER { if(ldcw_deref_identifier((ClassFile *)cf, $3) != CF_OK) { free($3); YYABORT; } free($3); }
 
 aaload:
-    AALOAD                   { if(aaload((ClassFile *)cf) != CF_OK) YYABORT; }
+    AALOAD                   { if(aaload() != CF_OK) YYABORT; }
     ;
 
 return:
@@ -686,12 +686,24 @@ getstatic:
     ;
 
 newarray:
-    NEWARRAY BYTE            { if(newarray_int((ClassFile *)cf, (int)$2) != CF_OK) YYABORT; }
+    NEWARRAY BYTE            { if(newarray_int((int)$2) != CF_OK) YYABORT; }
     ;
 
+anewarray:
+    ANEWARRAY INT            { if(anewarray_int($2) != CF_OK) YYABORT; }
+    ;
 
 pop:
     POP                      { if(pop() != CF_OK) YYABORT; }
+    ;
+
+pop2:
+    POP2                     { if(pop2() != CF_OK) YYABORT; }
+    ;
+
+dup:
+    DUP                      { if(dup() != CF_OK) YYABORT; }
+    ;
 
 %%
 
