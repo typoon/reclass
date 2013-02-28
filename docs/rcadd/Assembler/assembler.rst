@@ -1,11 +1,7 @@
-Assembler
-=========
-
 .. highlight:: php
 
-This document describes the syntax of the assembly language used by the 
-assembler in the rcadd tool.
-
+Assembler
+=========
 
 General Syntax
 --------------
@@ -504,4 +500,3 @@ sipush
 .. _Y:
 
 .. _Z:
-
