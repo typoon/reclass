@@ -61,11 +61,15 @@ void dump_method_code(ClassFile *cf, utf8 *name) {
         for(j = 0; j < cf->methods[i].attributes_count; j++) {
 
             attr_name = &cf->constant_pool[cf->methods[i].attributes[j].attribute_name_index].utfi;
+
+            printf("Reading attr: %s\n\n", attr_name->bytes);
+
             if(memcmp(attr_name->bytes, ATTR_CODE, attr_name->length) == 0) {
 
                 printf("  // max_stack = %d\n",  cf->methods[i].attributes[j].ca.max_stack);
                 printf("  // max_locals = %d\n", cf->methods[i].attributes[j].ca.max_locals);
                 printf("  // exception_table_length = %d\n", cf->methods[i].attributes[j].ca.exception_table_length);
+
 
                 printf("\n");
 
@@ -101,6 +105,13 @@ void dump_method_code(ClassFile *cf, utf8 *name) {
                 }
                 
                 free(code);
+            } else if(memcmp(attr_name->bytes, ATTR_LOCALVARIABLETABLE, attr_name->length) == 0) {
+
+                for(k = 0; k < cf->methods[i].attributes[j].lvta.local_variable_table_length; k++) {
+                    printf("Variable index %d\n", cf->methods[i].attributes[j].lvta.local_variable_table[k].index);
+                }
+                
+
             }
             
             //dumpAttributes(cf, cf->methods[i].attributes, cf->methods[i].attributes_count);

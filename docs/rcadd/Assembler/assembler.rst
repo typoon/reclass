@@ -1,7 +1,7 @@
 .. highlight:: php
 
-Assembler
-=========
+The Assembler
+=============
 
 General Syntax
 --------------

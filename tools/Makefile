@@ -7,4 +7,4 @@ all:
 
 clean:
 	rm helper.o
-	rm rcldump
+	rm rcdump

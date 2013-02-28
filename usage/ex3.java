@@ -1,6 +1,11 @@
 public class ex3 {
 	public static void main(String[] args) {
-		System.out.println("Oie!");
+        int i = 10;
+
+        i+=3;
+
+        for(i = 0; i < 10; i++)
+            System.out.println("Oie!");
 		bla();
 	}
 
