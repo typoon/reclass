@@ -7,7 +7,7 @@ nbproject
 nbproject/
 post
 docs/_build
-rcdump
+tools/rcdump
 lex.yy.c
 parser.tab.c
 parser.tab.h
