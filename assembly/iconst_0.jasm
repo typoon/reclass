@@ -1,0 +1,4 @@
+.method main ([Ljava/lang/String;)V
+    iconst_0
+    return
+.method_end

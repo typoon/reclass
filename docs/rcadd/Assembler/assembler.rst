@@ -264,35 +264,217 @@ getstatic
 iconst_m1
 ^^^^^^^^^
 
+::
+
+    iconst_m1
+
+Pushes the constant value `-1` to the stack.
+
+**Stack**
+
+::
+
+    Before:
+        value
+
+    After:
+        -1
+        value
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        iconst_m1
+        return
+    .method_end
+
 .. _iconst_0:
 
 iconst_0
 ^^^^^^^^
+
+::
+
+    iconst_0
+
+Pushes the constant value `0` to the stack.
+
+**Stack**
+
+::
+
+    Before:
+        value
+
+    After:
+        0
+        value
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        iconst_0
+        return
+    .method_end
 
 .. _iconst_1:
 
 iconst_1
 ^^^^^^^^
 
+::
+
+    iconst_1
+
+Pushes the constant value `1` to the stack.
+
+**Stack**
+
+::
+
+    Before:
+        value
+
+    After:
+        1
+        value
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        iconst_1
+        return
+    .method_end
+
 .. _iconst_2:
 
 iconst_2
 ^^^^^^^^
+
+::
+
+    iconst_2
+
+Pushes the constant value `2` to the stack.
+
+**Stack**
+
+::
+
+    Before:
+        value
+
+    After:
+        2
+        value
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        iconst_2
+        return
+    .method_end
 
 .. _iconst_3:
 
 iconst_3
 ^^^^^^^^
 
+::
+
+    iconst_3
+
+Pushes the constant value `3` to the stack.
+
+**Stack**
+
+::
+
+    Before:
+        value
+
+    After:
+        3
+        value
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        iconst_3
+        return
+    .method_end
+
 .. _iconst_4:
 
 iconst_4
 ^^^^^^^^
 
+::
+
+    iconst_4
+
+Pushes the constant value `4` to the stack.
+
+**Stack**
+
+::
+
+    Before:
+        value
+
+    After:
+        4
+        value
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        iconst_4
+        return
+    .method_end
+
 .. _iconst_5:
 
 iconst_5
 ^^^^^^^^
+
+::
+
+    iconst_5
+
+Pushes the constant value `5` to the stack.
+
+**Stack**
+
+::
+
+    Before:
+        value
+
+    After:
+        5
+        value
+
+**Example**
+
+::
+
+    .method main ([Ljava/lang/String;)V
+        iconst_5
+        return
+    .method_end
 
 .. _invokevirtual:
 
