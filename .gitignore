@@ -7,7 +7,9 @@ nbproject
 nbproject/
 post
 docs/_build
-tools/rcdump
+tools/rcdump/rcdump
+tools/rcadd/rcadd
+tools/rcmerge/rcmerge
 lex.yy.c
 parser.tab.c
 parser.tab.h

@@ -476,7 +476,6 @@ static int readAttributeInfo(ClassFile *cf, attribute_info *ai, FILE *f)
 
             debug(DBG_WARN, "\tai->ca.code_length = %d\n", ai->ca.code_length);
 
-
             fread(&ai->ca.exception_table_length, 1, sizeof (ai->ca.exception_table_length), f);
             ai->ca.exception_table_length = swapends(ai->ca.exception_table_length);
 
@@ -629,9 +628,9 @@ static int readAttributeInfo(ClassFile *cf, attribute_info *ai, FILE *f)
 
         if(strncmp((const char *)tmpu1p, ATTR_STACKMAPTABLE, length) == 0) {
             // TODO: Learn about this. Read JSR202
+
             char buffer[2048];
             fread(buffer, 1, ai->attribute_length, f);
-            //printf("AQUIE!!!!!!!\n");
         }
 
         //af->info = (u1 *)calloc(af->attribute_length, sizeof(u1));

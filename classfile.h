@@ -63,6 +63,7 @@ typedef struct _utf8 {
 // attribute types just as they did with the constant pool entries
 #define ATTR_CONSTANTVALUE       "ConstantValue"
 #define ATTR_CODE                "Code"
+#define ATTR_STACKMAPTABLE       "StackMapTable"
 #define ATTR_EXCEPTIONS          "Exceptions"
 #define ATTR_INNERCLASSES        "InnerClasses"
 #define ATTR_SYNTHETIC           "Synthetic"
@@ -70,7 +71,7 @@ typedef struct _utf8 {
 #define ATTR_LINENUMBERTABLE     "LineNumberTable"
 #define ATTR_LOCALVARIABLETABLE  "LocalVariableTable"
 #define ATTR_DEPRECATED          "Deprecated"
-#define ATTR_STACKMAPTABLE       "StackMapTable"
+
 
 // Below attributes are currently not being read. They should be.
 // Not reading them will cause class files with these attributes set to be read
