@@ -6,7 +6,7 @@
 #include "reclass.h"
 #include "helper.h"
 
-#include "../opcodes.h"
+#include "opcodes.h"
 
 #define MAX_CODE_SIZE (1024 * 500) // 500Kb should be enough 
 

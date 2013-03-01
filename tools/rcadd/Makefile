@@ -1,13 +1,19 @@
-CC=gcc
-JAVAC=javac
-FLAGS=-Wall -L../bin -I../ -lreclass -ggdb
+override BIN=rcadd
+override INCPATH=-I../../
+override LIBPATH=-L../../bin
+override OBJS=$(shell ls *.c | sed -e "s/\.c/.o/g")
+override FLAGS+=-lreclass
 
-all:
-	$(CC) ex1.c -o ex1 $(FLAGS)
-	$(CC) ex2.c -o ex2 $(FLAGS) 
-	$(CC) ex3.c -o ex3 $(FLAGS) 
-	
-	$(JAVAC) ex3.java
+all: $(OBJS)
+	$(CC) $(INCPATH) $(LIBPATH) $(OBJS) $(FLAGS) -o $(BIN)
+
+%.o: %.c
+	$(CC) $(INCPATH) $(LIBPATH) $(FLAGS) -c $<
 
 clean:
-	@rm ex1 ex2 ex3 ex3.class
+	-rm $(OBJS)
+	-rm $(BIN)
+
+
+install:
+	cp $(BIN) $(INSTALL_BIN_DIR)
