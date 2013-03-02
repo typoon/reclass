@@ -190,7 +190,7 @@ int main(int argc, char **argv) {
     while((opt = getopt_long(argc, argv, s_ops, l_ops, &option_index)) != -1) {
         switch(opt) {
             case 'd':
-                if(optarg == 0) {
+                if(optarg != 0) {
                     str.length = strlen(optarg);
                     str.str = optarg;
                     dump_method_code(&cf, &str);
